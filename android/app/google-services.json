@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "989951728763",
+    "project_id": "bridge-tech-advance",
+    "storage_bucket": "bridge-tech-advance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:989951728763:android:72607bf6f013f1f6e416de",
+        "android_client_info": {
+          "package_name": "com.bridgetech.urban_hive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "989951728763-lvvpa1i3ai87eti3brcall9e32pe7l0o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbVs1nFKJZOw21gQGWBD3gRUpkZKQr8ww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "989951728763-lvvpa1i3ai87eti3brcall9e32pe7l0o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
