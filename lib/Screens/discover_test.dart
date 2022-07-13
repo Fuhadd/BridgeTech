@@ -2,11 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:grouped_list/grouped_list.dart';
-import 'package:intl/intl.dart';
 import 'package:urban_hive_test/Config/Repositories/firestore_repository.dart';
-import 'package:urban_hive_test/Helpers/colors.dart';
 import 'package:urban_hive_test/Helpers/constants.dart';
 import 'package:urban_hive_test/Widgets/constant_widget.dart';
 
@@ -39,61 +35,59 @@ class _DiscoverTestScreenState extends State<DiscoverTestScreen> {
     return StreamBuilder(
       stream: chats,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasData) {
-          print(snapshot.data);
-          print(snapshot.data!.size);
-
-          // print(snapshot.data!.docs[0].get("time"));
-
-          {
-            return snapshot.hasData && snapshot.data!.docs.length > 0
-                ? PageView.builder(
-//                   '''
-// itemCount:
-//             shrinkWrap: true,
-//             itemBuilder: (context, index) {
-
-//               int? count = snapshot.data?.docs.length;
-//               return count == 0
-//                   ? NoContentWidget(mainText: 'Chat Screen')
-
-// '''
-                    // onPageChanged: (value) =>
-                    //     print("${value}, totla: ${user?.length}"),
-                    physics: new NeverScrollableScrollPhysics(),
-                    controller: _pageController,
-                    dragStartBehavior: DragStartBehavior.down,
-                    itemCount: snapshot.data?.docs.length ?? 6,
-                    itemBuilder: (BuildContext context, int index) {
-                      DocumentSnapshot ds = snapshot.data!.docs[index];
-                      AppUser buddyUser = AppUser(
-                        firstName: ds.get("firstName"),
-                        email: ds.get("email"),
-                        phone: ds.get("phoneNumber"),
-                        lastName: ds.get("lastName"),
-                        imageUrl: ds.get("imageUrl"),
-                        bio: ds.get("bio"),
-                        id: ds.get("id"),
-                        looking: ds.get("looking"),
-                        skills: ds.get("skills"),
-                        technical: ds.get("technical"),
-                        matchedUsers: ds.get("matchedUsers"),
-                      );
-                      //pri
-                      //   print(user?[index]!.technical);
-                      return DiscoverScreenWidget(
-                        pageCount: snapshot.data?.docs.length,
-                        pageNumber: index,
-                        pageController: _pageController,
-                        imageUrl: widget.currentUser.imageUrl,
-                        buddyUser: buddyUser,
-                        mainUser: widget.currentUser,
-                      );
-                    },
-                  )
-                : Container();
-          }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          print("waiting");
+          return loader();
         }
+        // if (snapshot.hasData == null) {
+        //   return NoUserWidget(
+        //     mainText: "No User Available",
+        //     subText: "Try Again Later",
+        //   );
+        // }
+
+        // ignore: prefer_is_empty
+        if (snapshot.hasData && snapshot.data!.docs.length > 0) {
+          return PageView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _pageController,
+            dragStartBehavior: DragStartBehavior.down,
+            itemCount: snapshot.data?.docs.length ?? 6,
+            itemBuilder: (BuildContext context, int index) {
+              DocumentSnapshot ds = snapshot.data!.docs[index];
+              AppUser buddyUser = AppUser(
+                firstName: ds.get("firstName"),
+                email: ds.get("email"),
+                phone: ds.get("phoneNumber"),
+                lastName: ds.get("lastName"),
+                imageUrl: ds.get("imageUrl"),
+                bio: ds.get("bio"),
+                id: ds.get("id"),
+                looking: ds.get("looking"),
+                skills: ds.get("skills"),
+                technical: ds.get("technical"),
+                matchedUsers: ds.get("matchedUsers"),
+              );
+              //pri
+              //   print(user?[index]!.technical);
+              return DiscoverScreenWidget(
+                pageCount: snapshot.data?.docs.length,
+                pageNumber: index,
+                pageController: _pageController,
+                imageUrl: widget.currentUser.imageUrl,
+                buddyUser: buddyUser,
+                mainUser: widget.currentUser,
+              );
+            },
+          );
+          // ignore: prefer_is_empty
+        } else if (snapshot.data?.docs.length == 0) {
+          return const NoUserWidget(
+            mainText: "No User Available",
+            subText: "Try Again Later",
+          );
+        }
+
         return loader();
       },
     );
@@ -127,7 +121,7 @@ class _DiscoverTestScreenState extends State<DiscoverTestScreen> {
       left: false,
       bottom: false,
       child: Scaffold(
-          drawer: NavigationDrawer(
+          drawer: const NavigationDrawer(
             pageIndex: 5,
             // user: widget.currentUser,
           ),
@@ -272,7 +266,7 @@ class ContainsChatScreen extends StatelessWidget {
               DocumentSnapshot ds = snapshot.data!.docs[index];
               int? count = snapshot.data?.docs.length;
               return count == 0
-                  ? NoContentWidget(mainText: 'Chat Screen')
+                  ? const NoContentWidget(mainText: 'Chat Screen')
                   : Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 17, vertical: 25),

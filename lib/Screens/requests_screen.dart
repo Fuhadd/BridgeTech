@@ -13,6 +13,7 @@ import '../Config/Repositories/firestore_repository.dart';
 import '../Helpers/colors.dart';
 import '../Widgets/shimmer_widget.dart';
 import 'chat_screen.dart';
+import 'failed_connection_screen.dart';
 
 class UserRequestsScreen extends StatefulWidget {
   const UserRequestsScreen({
@@ -33,90 +34,86 @@ class _UserRequestsScreenState extends State<UserRequestsScreen> {
   bool isloading = false;
   Stream<QuerySnapshot<Object?>>? chatRoomsStream;
 
-  String _printDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
-  }
-
   Widget chatRoomsList() {
     return StreamBuilder(
       stream: chatRoomsStream,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        return snapshot.hasData
-            ? ListView.builder(
-                itemCount: snapshot.data?.docs.length ?? 6,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot ds = snapshot.data!.docs[index];
-                  int? count = snapshot.data?.docs.length;
-                  return count == 0
-                      ? NoContentWidget(mainText: 'Chat Screen')
-                      : FutureBuilder<AppUser?>(
-                          future: FirestoreRepository().getThisUserInfo(
-                              ds.id, widget.currentUser.id.toString()),
-                          builder: (BuildContext context, snapshot) {
-                            if (snapshot.hasError) {
-                              return Text("Something went wrong");
-                            }
+        if (snapshot.hasData && snapshot.data?.docs.length != 0) {
+          return ListView.builder(
+              itemCount: snapshot.data?.docs.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                DocumentSnapshot ds = snapshot.data!.docs[index];
+                int? count = snapshot.data?.docs.length;
 
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return buildChatShimmer();
-                            }
+                return FutureBuilder<AppUser?>(
+                    future: FirestoreRepository().getThisUserInfo(
+                        ds.id, widget.currentUser.id.toString()),
+                    builder: (BuildContext context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text("Something went wrong");
+                      }
 
-                            if (snapshot.data == null) {
-                              return buildChatShimmer();
-                            }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return buildChatShimmer();
+                      }
 
-                            if (snapshot.connectionState ==
-                                    ConnectionState.done &&
-                                snapshot.hasData &&
-                                snapshot.data != null) {
-                              final user = snapshot.data!;
-                              print(17778);
-                              print(user);
-                              final time = DateTime.now()
-                                  .difference(ds["sentAt"].toDate());
-                              print("This is time");
-                              final convertedTime = (time.inSeconds);
+                      if (!snapshot.hasData) {
+                        return Text("data");
+                      }
 
-                              DateTime formattedDate = (ds["sentAt"].toDate());
-                              print(formattedDate);
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData &&
+                          snapshot.data != null) {
+                        final user = snapshot.data!;
+                        print(17778);
+                        print(user);
+                        final time =
+                            DateTime.now().difference(ds["sentAt"].toDate());
+                        print("This is time");
+                        final convertedTime = (time.inSeconds);
 
-                              String? finalTime;
-                              if (convertedTime < 60) {
-                                finalTime = "${time.inSeconds} seconds ago";
-                              } else if (convertedTime > 60 &&
-                                  convertedTime < 3600) {
-                                finalTime = "${time.inMinutes} minutes ago";
-                              } else if (convertedTime > 3600 &&
-                                  convertedTime < 86400) {
-                                finalTime = "${time.inHours} hours ago";
-                              } else if (convertedTime <= 24 &&
-                                  convertedTime > 48) {
-                                finalTime = "yesterday";
-                              } else {
-                                finalTime = "${time.inDays} days ago";
-                              }
+                        DateTime formattedDate = (ds["sentAt"].toDate());
+                        print(formattedDate);
 
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 17, vertical: 25),
-                                child: MatchRequestContainer(
-                                    buddyUser: user,
-                                    mainUser: widget.currentUser,
-                                    lastMessage: ds["sentBy"],
-                                    matchTime: finalTime,
-                                    chatRoomId: ds.id,
-                                    myUsername: widget.currentUser.lastName),
-                              );
-                            }
-                            return buildChatShimmer();
-                          });
-                })
-            : buildChatShimmer();
+                        String? finalTime;
+                        if (convertedTime < 60) {
+                          finalTime = "${time.inSeconds} seconds ago";
+                        } else if (convertedTime > 60 && convertedTime < 3600) {
+                          finalTime = "${time.inMinutes} minutes ago";
+                        } else if (convertedTime > 3600 &&
+                            convertedTime < 86400) {
+                          finalTime = "${time.inHours} hours ago";
+                        } else if (convertedTime <= 24 && convertedTime > 48) {
+                          finalTime = "yesterday";
+                        } else {
+                          finalTime = "${time.inDays} days ago";
+                        }
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 17, vertical: 25),
+                          child: MatchRequestContainer(
+                              buddyUser: user,
+                              mainUser: widget.currentUser,
+                              lastMessage: ds["sentBy"],
+                              matchTime: finalTime,
+                              chatRoomId: ds.id,
+                              myUsername: widget.currentUser.lastName),
+                        );
+                      }
+
+                      return Text("data");
+                    });
+              });
+        } else if (snapshot.data?.docs.length == 0) {
+          return NoUserWidget(
+            mainText: "No Received Request",
+            subText: "Try Again Later",
+          );
+        } else {
+          return buildChatShimmer();
+        }
       },
     );
   }

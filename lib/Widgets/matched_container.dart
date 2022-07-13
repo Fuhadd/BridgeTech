@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:urban_hive_test/Screens/view_other_profiles.dart';
 
 import '../Config/Repositories/firestore_repository.dart';
 import '../Helpers/colors.dart';
@@ -126,7 +127,14 @@ class MatchContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SmallCustomAcceptButton(
-                    onTap: (() async {}),
+                    onTap: (() async {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ViewOtherProfiles(buddyUser: buddyUser!),
+                        ),
+                      );
+                    }),
                     isaccept: false,
                     icon: FontAwesomeIcons.idCard,
                     title: 'Profile'),
@@ -421,7 +429,14 @@ class MatchFailedContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SmallCustomAcceptButton(
-                    onTap: (() async {}),
+                    onTap: (() async {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ViewOtherProfiles(buddyUser: buddyUser!),
+                        ),
+                      );
+                    }),
                     isaccept: false,
                     icon: FontAwesomeIcons.xmark,
                     title: 'Profile'),

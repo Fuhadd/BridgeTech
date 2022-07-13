@@ -13,6 +13,7 @@ import '../Config/Repositories/firestore_repository.dart';
 import '../Helpers/colors.dart';
 import '../Widgets/shimmer_widget.dart';
 import 'chat_screen.dart';
+import 'failed_connection_screen.dart';
 
 class SentRequestScreen extends StatefulWidget {
   const SentRequestScreen({
@@ -44,81 +45,88 @@ class _SentRequestScreenState extends State<SentRequestScreen> {
     return StreamBuilder(
       stream: chatRoomsStream,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        return snapshot.hasData
-            ? ListView.builder(
-                itemCount: snapshot.data?.docs.length ?? 6,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot ds = snapshot.data!.docs[index];
-                  int? count = snapshot.data?.docs.length;
-                  return count == 0
-                      ? NoContentWidget(mainText: 'Chat Screen')
-                      : FutureBuilder<AppUser?>(
-                          future: FirestoreRepository().getThisUserInfo(
-                              ds.id, widget.currentUser.id.toString()),
-                          builder: (BuildContext context, snapshot) {
-                            if (snapshot.hasError) {
-                              return Text("Something went wrong");
+        if (snapshot.hasData && snapshot.data?.docs.length != 0) {
+          return ListView.builder(
+              itemCount: snapshot.data?.docs.length ?? 6,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                DocumentSnapshot ds = snapshot.data!.docs[index];
+                int? count = snapshot.data?.docs.length;
+                return count == 0
+                    ? NoContentWidget(mainText: 'Chat Screen')
+                    : FutureBuilder<AppUser?>(
+                        future: FirestoreRepository().getThisUserInfo(
+                            ds.id, widget.currentUser.id.toString()),
+                        builder: (BuildContext context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text("Something went wrong");
+                          }
+
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            print("waiting");
+                            return buildChatShimmer();
+                          }
+
+                          if (snapshot.data == null) {
+                            print("Empty");
+                            return buildChatShimmer();
+                          }
+
+                          if (snapshot.connectionState ==
+                                  ConnectionState.done &&
+                              snapshot.hasData &&
+                              snapshot.data != null) {
+                            final user = snapshot.data!;
+                            print(17778);
+                            print(user);
+                            final time = DateTime.now()
+                                .difference(ds["sentAt"].toDate());
+                            print("This is time");
+                            final convertedTime = (time.inSeconds);
+
+                            DateTime formattedDate = (ds["sentAt"].toDate());
+                            print(formattedDate);
+
+                            String? finalTime;
+                            if (convertedTime < 60) {
+                              finalTime = "${time.inSeconds} seconds ago";
+                            } else if (convertedTime > 60 &&
+                                convertedTime < 3600) {
+                              finalTime = "${time.inMinutes} minutes ago";
+                            } else if (convertedTime > 3600 &&
+                                convertedTime < 86400) {
+                              finalTime = "${time.inHours} hours ago";
+                            } else if (convertedTime <= 24 &&
+                                convertedTime > 48) {
+                              finalTime = "yesterday";
+                            } else {
+                              finalTime = "${time.inDays} days ago";
                             }
 
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              print("waiting");
-                              return buildChatShimmer();
-                            }
-
-                            if (snapshot.data == null) {
-                              print("Empty");
-                              return buildChatShimmer();
-                            }
-
-                            if (snapshot.connectionState ==
-                                    ConnectionState.done &&
-                                snapshot.hasData &&
-                                snapshot.data != null) {
-                              final user = snapshot.data!;
-                              print(17778);
-                              print(user);
-                              final time = DateTime.now()
-                                  .difference(ds["sentAt"].toDate());
-                              print("This is time");
-                              final convertedTime = (time.inSeconds);
-
-                              DateTime formattedDate = (ds["sentAt"].toDate());
-                              print(formattedDate);
-
-                              String? finalTime;
-                              if (convertedTime < 60) {
-                                finalTime = "${time.inSeconds} seconds ago";
-                              } else if (convertedTime > 60 &&
-                                  convertedTime < 3600) {
-                                finalTime = "${time.inMinutes} minutes ago";
-                              } else if (convertedTime > 3600 &&
-                                  convertedTime < 86400) {
-                                finalTime = "${time.inHours} hours ago";
-                              } else if (convertedTime <= 24 &&
-                                  convertedTime > 48) {
-                                finalTime = "yesterday";
-                              } else {
-                                finalTime = "${time.inDays} days ago";
-                              }
-
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 17, vertical: 25),
-                                child: SentRequestContainer(
-                                    buddyUser: user,
-                                    mainUser: widget.currentUser,
-                                    lastMessage: ds["sentBy"],
-                                    matchTime: finalTime,
-                                    chatRoomId: ds.id,
-                                    myUsername: widget.currentUser.lastName),
-                              );
-                            }
-                            return Container();
-                          });
-                })
-            : buildChatShimmer();
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 17, vertical: 25),
+                              child: SentRequestContainer(
+                                  buddyUser: user,
+                                  mainUser: widget.currentUser,
+                                  lastMessage: ds["sentBy"],
+                                  matchTime: finalTime,
+                                  chatRoomId: ds.id,
+                                  myUsername: widget.currentUser.lastName),
+                            );
+                          }
+                          return Container();
+                        });
+              });
+        } else if (snapshot.data?.docs.length == 0) {
+          return NoUserWidget(
+            mainText: "There are no pending invites",
+            subText: "",
+          );
+        } else {
+          return buildChatShimmer();
+        }
       },
     );
   }

@@ -54,7 +54,7 @@ class _VerifyBioScreenState extends State<VerifyBioScreen> {
   @override
   Widget build(BuildContext context) {
     if (isVerified == true) {
-      return HomePage(
+      return const HomePage(
           // currentUser: widget.user,//
           );
     } else if (isVerified == false) {

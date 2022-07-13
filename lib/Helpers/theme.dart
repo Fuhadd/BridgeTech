@@ -3,11 +3,11 @@ import 'package:urban_hive_test/Helpers/colors.dart';
 
 ThemeData theme() {
   return ThemeData(
-      fontFamily: 'Poppins',
+      fontFamily: 'Lato',
       backgroundColor: background,
       primarySwatch: Colors.yellow,
       secondaryHeaderColor: Colors.deepPurple,
-      accentColor: Yellow,
+      accentColor: Color(0xfff4a50C),
       textTheme: const TextTheme(
         headline1: TextStyle(
           color: Color(0xFF2B2E4A),
@@ -27,7 +27,7 @@ ThemeData theme() {
         headline4: TextStyle(
           color: Color(0xFF2B2E4A),
           fontWeight: FontWeight.bold,
-          fontSize: 20,
+          fontSize: 19,
         ),
         headline5: TextStyle(
           color: Color(0xFF2B2E4A),

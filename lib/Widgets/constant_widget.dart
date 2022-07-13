@@ -52,7 +52,7 @@ class SubTitleText extends StatelessWidget {
   SubTitleText({
     required this.title,
     this.size = 21,
-    this.fontWeight = FontWeight.bold,
+    this.fontWeight = FontWeight.w900,
     Key? key,
   }) : super(key: key);
 

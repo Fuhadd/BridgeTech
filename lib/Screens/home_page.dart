@@ -277,7 +277,7 @@ class _HomePageState extends State<HomePage> {
             //menuMaxHeight: 100,
             hint: SubTitleText(
               title: title,
-              size: 17,
+              size: 18,
             ),
             onChanged: (value) => setState(() {}),
             items: User1.users

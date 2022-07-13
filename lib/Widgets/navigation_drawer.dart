@@ -113,7 +113,7 @@ class SideMenus extends StatelessWidget {
         style: Theme.of(context)
             .textTheme
             .headline4!
-            .copyWith(fontWeight: FontWeight.bold, color: color),
+            .copyWith(fontWeight: FontWeight.w900, color: color),
       ),
       onTap: onClick,
     );
