@@ -1,18 +1,24 @@
+// ignore_for_file: prefer_is_empty
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:urban_hive_test/Helpers/colors.dart';
 import 'package:urban_hive_test/Helpers/constants.dart';
+import 'package:urban_hive_test/Screens/requests_screen.dart';
+import 'package:urban_hive_test/Screens/view_other_profiles.dart';
 import 'package:urban_hive_test/Widgets/navigation_drawer.dart';
-import 'package:urban_hive_test/Widgets/non_included_screen.dart';
 
+import '../Config/Repositories/firestore_repository.dart';
 import '../Config/Repositories/user_repository.dart';
 import '../Models/models.dart';
 import '../Widgets/constant_widget.dart';
+import 'matched_users_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
   static const routeName = '/home';
-  // final AppUser currentUser;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -20,10 +26,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   AppUser? currentUser;
+  List<AppUser> users = [];
+  Stream<QuerySnapshot<Object?>>? userRequestStream;
+  Stream<QuerySnapshot<Object?>>? matchedUsersStream;
 
   Future<AppUser> getMyInfoFromSharedPreference() async {
     currentUser = await UserRepository().fetchCurrentUser();
     return currentUser!;
+  }
+
+  getChatRooms() async {
+    String? uid = FirebaseAuth.instance.currentUser?.uid.toString();
+    matchedUsersStream =
+        await FirestoreRepository().getMatchedConnections(uid!);
+    setState(() {});
   }
 
   doThisOnLaunch() async {
@@ -32,19 +48,28 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // currentUser = getMyInfoFromSharedPreference().th;
-
     UserRepository().fetchCurrentUser().then((value) {
       setState(() {
         currentUser = value;
       });
     });
-    // doThisOnLaunch();
-    // TODO: implement initState
+    String uid = FirebaseAuth.instance.currentUser!.uid.toString();
+
+    FirestoreRepository().getMatchedConnections(uid).then((value) {
+      setState(() {
+        matchedUsersStream = value;
+      });
+    });
+
+    FirestoreRepository().getAllRequest(uid).then((value) {
+      setState(() {
+        userRequestStream = value;
+      });
+    });
+
     super.initState();
   }
 
-  // List users = User.users;
   @override
   Widget build(BuildContext context) {
     return currentUser == null
@@ -53,9 +78,8 @@ class _HomePageState extends State<HomePage> {
             onWillPop: () async => false,
             child: Scaffold(
               backgroundColor: background,
-              drawer: NavigationDrawer(
+              drawer: const NavigationDrawer(
                 pageIndex: 1,
-                // user: currentUser!,
               ),
               appBar: MessageAppar(context, 'Dashboard', currentUser!.imageUrl),
               body: SingleChildScrollView(
@@ -67,18 +91,12 @@ class _HomePageState extends State<HomePage> {
                       Container(
                         decoration: BoxDecoration(
                           boxShadow: const [
-                            // BoxShadow(
-                            //     blurRadius: 5,
-                            //     offset: Offset(5, 5),
-                            //     color: Colors.grey),
                             BoxShadow(
                                 blurRadius: 7,
                                 offset: Offset(-7, -7),
                                 color: Colors.grey),
-                            //BoxShadow(color: white, offset: const Offset(5, 0)),
                           ],
                           borderRadius: BorderRadius.circular(15),
-                          //border: Border.all(),
                           color: const Color.fromRGBO(255, 189, 89, 1),
                         ),
                         padding: const EdgeInsets.symmetric(
@@ -94,14 +112,14 @@ class _HomePageState extends State<HomePage> {
                                       title: 'Active Users',
                                     ),
                                     verticalSpacer(5),
-                                    Text(
+                                    const Text(
                                       "Number of users online",
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     verticalSpacer(15),
                                     Row(
                                       children: [
-                                        TitleText(title: '645'),
+                                        const TitleText(title: '645'),
                                         horizontalSpacer(10),
                                         Text(
                                           "+5.25%",
@@ -183,67 +201,251 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.black,
                       ),
                       verticalSpacer(15),
-                      UserDropdownBox("Co-Founder Matches"),
-                      verticalSpacer(20),
-                      UserDropdownBox("Co-Founder Requests"),
-                      verticalSpacer(20),
-                      UserDropdownBox("Saved Profiles"),
-                      verticalSpacer(30),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Container(
-                          //height: 90,
-                          child: Column(
-                            children: [
-                              SubTitleText(
-                                title: "Recent Messages",
-                                size: 20,
-                              ),
-                              verticalSpacer(10),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: Row(
-                                  //mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage: NetworkImage(Conversation
-                                          .conversations[0].imageUrl),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15.0),
-                                      child: Container(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SubTitleText(
-                                              title: Conversation
-                                                  .conversations[0].name,
-                                              size: 21,
-                                            ),
-                                            verticalSpacer(6),
-                                            Text(
-                                              Conversation
-                                                  .conversations[0].content,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                              softWrap: false,
-                                            ),
-                                            verticalSpacer(30),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                      StreamBuilder(
+                        stream: matchedUsersStream,
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData &&
+                              snapshot.data?.docs.length != 0) {
+                            return ListView.builder(
+                                itemCount: 1,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  DocumentSnapshot ds = snapshot.data!.docs[0];
+                                  int? count = snapshot.data?.docs.length;
+                                  return FutureBuilder<AppUser?>(
+                                      future: FirestoreRepository()
+                                          .getThisUserInfo(ds.id,
+                                              currentUser!.id.toString()),
+                                      builder:
+                                          (BuildContext context, snapshot) {
+                                        if (snapshot.hasError) {
+                                          return const Text(
+                                              "Something went wrong");
+                                        }
+
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          print("waiting");
+                                          return UserDropdownBox(
+                                              "Co-Founder Matches",
+                                              [],
+                                              currentUser!,
+                                              '');
+                                        }
+
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.hasData &&
+                                            snapshot.data != null) {
+                                          final user = snapshot.data!;
+                                          users = [];
+                                          users.add(user);
+
+                                          final time = DateTime.now()
+                                              .difference(
+                                                  ds["sentAt"].toDate());
+                                          print("This is time");
+                                          final convertedTime =
+                                              (time.inSeconds);
+
+                                          DateTime formattedDate =
+                                              (ds["sentAt"].toDate());
+                                          print(formattedDate);
+
+                                          String? finalTime;
+                                          if (convertedTime < 60) {
+                                            finalTime =
+                                                "${time.inSeconds} seconds ago";
+                                          } else if (convertedTime > 60 &&
+                                              convertedTime < 3600) {
+                                            finalTime =
+                                                "${time.inMinutes} minutes ago";
+                                          } else if (convertedTime > 3600 &&
+                                              convertedTime < 86400) {
+                                            finalTime =
+                                                "${time.inHours} hours ago";
+                                          } else if (convertedTime <= 24 &&
+                                              convertedTime > 48) {
+                                            finalTime = "yesterday";
+                                          } else {
+                                            finalTime =
+                                                "${time.inDays} days ago";
+                                          }
+
+                                          return UserDropdownBox(
+                                            "Co-Founder Matches",
+                                            users,
+                                            currentUser!,
+                                            finalTime,
+                                          );
+                                        }
+                                        return UserDropdownBox(
+                                            "Co-Founder Matches",
+                                            [],
+                                            currentUser!,
+                                            '');
+                                      });
+                                });
+                          } else if (snapshot.data?.docs.length == 0) {
+                            return UserDropdownBox(
+                                "Co-Founder Matches", [], currentUser!, '');
+                          } else {
+                            return UserDropdownBox(
+                                "Co-Founder Matches", [], currentUser!, '');
+                          }
+                        },
                       ),
+                      verticalSpacer(25),
+                      StreamBuilder(
+                        stream: userRequestStream,
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData &&
+                              snapshot.data?.docs.length != 0) {
+                            return ListView.builder(
+                                itemCount: 1,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  DocumentSnapshot ds = snapshot.data!.docs[0];
+                                  int? count = snapshot.data?.docs.length;
+                                  return FutureBuilder<AppUser?>(
+                                      future: FirestoreRepository()
+                                          .getThisUserInfo(ds.id,
+                                              currentUser!.id.toString()),
+                                      builder:
+                                          (BuildContext context, snapshot) {
+                                        if (snapshot.hasError) {
+                                          return const Text(
+                                              "Something went wrong");
+                                        }
+
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return RequestDropdownBox(
+                                              "Co-Founder Requests",
+                                              [],
+                                              currentUser!,
+                                              '');
+                                        }
+
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.hasData &&
+                                            snapshot.data != null) {
+                                          final user = snapshot.data!;
+                                          users = [];
+                                          users.add(user);
+
+                                          final time = DateTime.now()
+                                              .difference(
+                                                  ds["sentAt"].toDate());
+                                          print("This is time");
+                                          final convertedTime =
+                                              (time.inSeconds);
+
+                                          DateTime formattedDate =
+                                              (ds["sentAt"].toDate());
+                                          print(formattedDate);
+
+                                          String? finalTime;
+                                          if (convertedTime < 60) {
+                                            finalTime =
+                                                "${time.inSeconds} seconds ago";
+                                          } else if (convertedTime > 60 &&
+                                              convertedTime < 3600) {
+                                            finalTime =
+                                                "${time.inMinutes} minutes ago";
+                                          } else if (convertedTime > 3600 &&
+                                              convertedTime < 86400) {
+                                            finalTime =
+                                                "${time.inHours} hours ago";
+                                          } else if (convertedTime <= 24 &&
+                                              convertedTime > 48) {
+                                            finalTime = "yesterday";
+                                          } else {
+                                            finalTime =
+                                                "${time.inDays} days ago";
+                                          }
+
+                                          return RequestDropdownBox(
+                                            "Co-Founder Requests",
+                                            users,
+                                            currentUser!,
+                                            finalTime,
+                                          );
+                                        }
+                                        return RequestDropdownBox(
+                                          "Co-Founder Requests",
+                                          [],
+                                          currentUser!,
+                                          '',
+                                        );
+                                      });
+                                });
+                          } else if (snapshot.data?.docs.length == 0) {
+                            return RequestDropdownBox(
+                                "Co-Founder Requests", [], currentUser!, '');
+                          } else {
+                            return RequestDropdownBox(
+                                "Co-Founder Requests", [], currentUser!, '');
+                          }
+                        },
+                      ),
+                      verticalSpacer(30),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      //   child: Container(
+                      //     child: Column(
+                      //       children: [
+                      //         SubTitleText(
+                      //           title: "Recent Messages",
+                      //           size: 20,
+                      //         ),
+                      //         verticalSpacer(10),
+                      //         Padding(
+                      //           padding: const EdgeInsets.only(left: 20.0),
+                      //           child: Row(
+                      //             crossAxisAlignment: CrossAxisAlignment.start,
+                      //             children: [
+                      //               CircleAvatar(
+                      //                 radius: 30,
+                      //                 backgroundImage: NetworkImage(Conversation
+                      //                     .conversations[0].imageUrl),
+                      //               ),
+                      //               Padding(
+                      //                 padding: const EdgeInsets.symmetric(
+                      //                     horizontal: 15.0),
+                      //                 child: Container(
+                      //                   child: Column(
+                      //                     crossAxisAlignment:
+                      //                         CrossAxisAlignment.start,
+                      //                     children: [
+                      //                       SubTitleText(
+                      //                         title: Conversation
+                      //                             .conversations[0].name,
+                      //                         size: 21,
+                      //                       ),
+                      //                       verticalSpacer(6),
+                      //                       Text(
+                      //                         Conversation
+                      //                             .conversations[0].content,
+                      //                         overflow: TextOverflow.ellipsis,
+                      //                         maxLines: 2,
+                      //                         softWrap: false,
+                      //                       ),
+                      //                       verticalSpacer(30),
+                      //                     ],
+                      //                   ),
+                      //                 ),
+                      //               )
+                      //             ],
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -252,7 +454,8 @@ class _HomePageState extends State<HomePage> {
           );
   }
 
-  Container UserDropdownBox(String title) {
+  Container UserDropdownBox(String title, List<AppUser> users,
+      AppUser currentUser, String? finalTime) {
     return Container(
       height: 70,
       width: double.infinity,
@@ -261,45 +464,40 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
           boxShadow: const [
             BoxShadow(blurRadius: 5, offset: Offset(2, 5), color: Colors.grey),
-            // BoxShadow(offset: const Offset(-5, 0), color: white),
-            // BoxShadow(color: white, offset: const Offset(5, 0)),
           ]),
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: DropdownButton<dynamic>(
             isExpanded: true,
-
             icon: const Icon(
               FontAwesomeIcons.caretDown,
               size: 25,
             ),
             itemHeight: 230,
-            //menuMaxHeight: 100,
             hint: SubTitleText(
               title: title,
               size: 18,
             ),
             onChanged: (value) => setState(() {}),
-            items: User1.users
+            items: users
                 .map(
-                  (user) => CustomDropdownMenu(user),
+                  (user) => CustomDropdownMenu(user, currentUser, finalTime),
                 )
                 .toList(),
           )),
     );
   }
 
-  DropdownMenuItem<dynamic> CustomDropdownMenu(User1 user) {
+  DropdownMenuItem<dynamic> CustomDropdownMenu(
+      AppUser user, AppUser currentUser, String? finalTime) {
     return DropdownMenuItem(
         value: user,
         child: Padding(
           padding: const EdgeInsets.only(top: 15.0),
           child: Container(
-            //height: 90,
             child: Column(
               children: [
                 Row(
-                  //mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CircleAvatar(
@@ -308,17 +506,18 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: Container(
+                      child: SizedBox(
                         width: 200,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SubTitleText(title: user.name),
+                            SubTitleText(
+                                title: "${user.lastName} ${user.firstName}"),
                             verticalSpacer(6),
-                            const Text("Matched 5 days Ago"),
+                            Text("Matched $finalTime"),
                             verticalSpacer(15),
                             Text(
-                              user.bio,
+                              user.bio!,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               softWrap: false,
@@ -330,108 +529,151 @@ class _HomePageState extends State<HomePage> {
                     )
                   ],
                 ),
+                verticalSpacer(20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      SmallCustomButton(title: "MANAGE"),
-                      // horizontalSpacer(10),
-                      SmallCustomButton(title: "MESSAGE"),
+                    children: [
+                      ClickableSmallCustomButton(
+                        title: "VIEW",
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ViewOtherProfiles(buddyUser: user),
+                            ),
+                          );
+                        },
+                      ),
+                      ClickableSmallCustomButton(
+                        title: "OTHERS",
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => MatchedUsersScreen(
+                                    currentUser: currentUser)),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 )
               ],
             ),
           ),
-        )
-        // ListTile(
-        //   horizontalTitleGap: 40,
-        //   contentPadding: EdgeInsets.all(10),
-
-        //   title: SubTitleText(title: user.name),
-        //   //Text(Conversation.conversations[index].name),
-        //   leading: CircleAvatar(
-        //     backgroundImage: NetworkImage(user.imageUrl),
-        //   ),
-        //   //subtitle: Text(user.content),
-        // ),
-        );
+        ));
   }
-// DropdownMenuItem customBuildMenuItem(User e) {}
-}
 
-class _CustomCurvedBar extends StatelessWidget {
-  const _CustomCurvedBar({
-    Key? key,
-  }) : super(key: key);
+  Container RequestDropdownBox(String title, List<AppUser> users,
+      AppUser currentUser, String? finalTime) {
+    return Container(
+      height: 70,
+      width: double.infinity,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: const [
+            BoxShadow(blurRadius: 5, offset: Offset(2, 5), color: Colors.grey),
+          ]),
+      child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: DropdownButton<dynamic>(
+            isExpanded: true,
+            icon: const Icon(
+              FontAwesomeIcons.caretDown,
+              size: 25,
+            ),
+            itemHeight: 230,
+            hint: SubTitleText(
+              title: title,
+              size: 18,
+            ),
+            onChanged: (value) => setState(() {}),
+            items: users
+                .map(
+                  (user) =>
+                      RequestCustomDropdownMenu(user, currentUser, finalTime),
+                )
+                .toList(),
+          )),
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Stack(children: [
-      ClipPath(
-        clipper: WaveClipper(),
-        child: Container(
-          height: 210,
-          decoration: const BoxDecoration(color: Colors.purple),
-        ),
-      ),
-      ClipPath(
-        clipper: WaveClipper(),
-        child: Container(
-          height: 200,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                colors: [Colors.purple, Colors.white],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter),
+  DropdownMenuItem<dynamic> RequestCustomDropdownMenu(
+      AppUser user, AppUser currentUser, String? finalTime) {
+    return DropdownMenuItem(
+        value: user,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: Container(
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 35,
+                      backgroundImage: NetworkImage(user.imageUrl),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                      child: SizedBox(
+                        width: 200,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SubTitleText(
+                                title: "${user.lastName} ${user.firstName}"),
+                            verticalSpacer(6),
+                            Text("Sent $finalTime"),
+                            verticalSpacer(15),
+                            Text(
+                              user.bio!,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              softWrap: false,
+                            ),
+                            verticalSpacer(20),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                verticalSpacer(20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ClickableSmallCustomButton(
+                        title: "VIEW",
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ViewOtherProfiles(buddyUser: user),
+                            ),
+                          );
+                        },
+                      ),
+                      ClickableSmallCustomButton(
+                        title: "OTHERS",
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => UserRequestsScreen(
+                                    currentUser: currentUser)),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-      ),
-    ]);
+        ));
   }
-}
-
-class WaveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0, size.height);
-    var firstController = Offset(0, size.height - 90);
-    var firstEnd = Offset(size.width / 4, size.height - 90);
-    path.quadraticBezierTo(
-      firstController.dx,
-      firstController.dy,
-      firstEnd.dx,
-      firstEnd.dy,
-    );
-    path.lineTo(size.width - 100, size.height - 90);
-    var secondController = Offset(size.width - 55, size.height - 90);
-    var secondEnd = Offset(size.width, size.height - 140);
-    path.quadraticBezierTo(
-      secondController.dx,
-      secondController.dy,
-      secondEnd.dx,
-      secondEnd.dy,
-    );
-    path.lineTo(size.width, 0);
-    path.close;
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper oldClipper) {
-    return true;
-  }
-
-  InputDecoration formDecoration = const InputDecoration(
-      floatingLabelStyle: TextStyle(color: Colors.pink),
-      fillColor: Colors.pink,
-      focusedBorder:
-          UnderlineInputBorder(borderSide: BorderSide(color: Colors.pink)),
-      prefixIcon: Icon(
-        Icons.mail,
-        size: 20,
-      ),
-      labelText: 'Gender');
 }

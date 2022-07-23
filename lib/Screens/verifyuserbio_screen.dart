@@ -1,16 +1,13 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:urban_hive_test/Config/Repositories/firestore_repository.dart';
-import 'package:urban_hive_test/Helpers/constants.dart';
+import 'package:urban_hive_test/Helpers/colors.dart';
 import 'package:urban_hive_test/Models/models.dart';
-import 'package:urban_hive_test/Screens/home_page.dart';
-import 'package:urban_hive_test/Screens/more_info_screen.dart';
+import 'package:urban_hive_test/Screens/incomplete_profile_screen.dart';
 
-import '../Helpers/colors.dart';
 import '../Widgets/constant_widget.dart';
-import 'login_screen.dart';
+import 'user_profile_test.dart';
 
 class VerifyBioScreen extends StatefulWidget {
   const VerifyBioScreen({Key? key, required this.user}) : super(key: key);
@@ -54,15 +51,40 @@ class _VerifyBioScreenState extends State<VerifyBioScreen> {
   @override
   Widget build(BuildContext context) {
     if (isVerified == true) {
-      return const HomePage(
-          // currentUser: widget.user,//
-          );
+      return const UserProfileTestScreen();
+
+      // ProfileScreen(
+      //     // currentUser: user,
+      //     );
     } else if (isVerified == false) {
-      return MoreInfoScreen();
+      return const IncompleteProfileScreen();
     } else {
       return Scaffold(
-          body: Center(child: loader()),
-          backgroundColor: Colors.grey.withOpacity(0.4));
+          body: Center(child: loader()), backgroundColor: background);
     }
   }
 }
+
+
+
+
+
+
+
+//   @override
+//   Widget build(BuildContext context) {
+//     if (isVerified == true) {
+//       return const HomePage(
+//           // currentUser: widget.user,//
+//           );
+//     } else if (isVerified == false) {
+//       return MoreInfoScreen();
+//     } else {
+//       return Scaffold(
+//           body: Center(child: loader()),
+//           backgroundColor: Colors.grey.withOpacity(0.4));
+//     }
+//   }
+// }
+
+

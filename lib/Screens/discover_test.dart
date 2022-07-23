@@ -126,7 +126,7 @@ class _DiscoverTestScreenState extends State<DiscoverTestScreen> {
             // user: widget.currentUser,
           ),
           appBar:
-              MessageAppar(context, 'Discover', widget.currentUser.imageUrl),
+              MessageAppar(context, 'Candidates', widget.currentUser.imageUrl),
           body: ChatMessagePage()
           // Column(
           //   children: [

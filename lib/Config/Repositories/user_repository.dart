@@ -64,6 +64,7 @@ class UserRepository {
       }
       throw Exception(message);
     }
+    return null;
   }
 
   Future isUserSignedIn() async {

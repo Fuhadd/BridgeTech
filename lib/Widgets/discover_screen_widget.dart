@@ -140,7 +140,7 @@ class _DiscoverScreenWidgetState extends State<DiscoverScreenWidget> {
             verticalSpacer(30),
             Container(
                 height: 100,
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 width: double.infinity,
                 color: Colors.white,
                 child: FittedBox(
@@ -159,7 +159,7 @@ class _DiscoverScreenWidgetState extends State<DiscoverScreenWidget> {
                                   color: Yellow,
                                 )),
                       horizontalSpacer(10),
-                      VerticalDivider(
+                      const VerticalDivider(
                         indent: 20,
                         endIndent: 20,
                         color: Colors.grey,
@@ -175,17 +175,22 @@ class _DiscoverScreenWidgetState extends State<DiscoverScreenWidget> {
                     ],
                   ),
                 )),
-            verticalSpacer(30),
+            verticalSpacer(20),
             CustomSubTitleText(
               align: true,
               title: 'General Information',
-              color: Color(0xFF2B2E4A),
+              color: const Color(0xFF2B2E4A),
             ),
-            verticalSpacer(25),
-            GestureDetector(
-                onTap: (() =>
-                    _showBottomSheet(context, buddyUser: widget.buddyUser)),
-                child: _UserInfoCard('title')),
+            verticalSpacer(15),
+            CustomBioText(
+              align: true,
+              title: widget.buddyUser!.bio!,
+              color: Colors.grey,
+            ),
+            // GestureDetector(
+            //     onTap: (() =>
+            //         _showBottomSheet(context, buddyUser: widget.buddyUser)),
+            //     child: _UserInfoCard('title')),
             verticalSpacer(30),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -249,11 +254,11 @@ class _DiscoverScreenWidgetState extends State<DiscoverScreenWidget> {
                             .savePageIndex(widget.pageNumber);
                         if (widget.pageNumber == widget.pageCount! - 1) {
                           widget.pageController.animateToPage(0,
-                              duration: Duration(milliseconds: 10),
+                              duration: const Duration(milliseconds: 10),
                               curve: Curves.easeOutQuart);
                         } else {
                           widget.pageController.nextPage(
-                              duration: Duration(milliseconds: 500),
+                              duration: const Duration(milliseconds: 500),
                               curve: Curves.easeIn);
                         }
                       }),
@@ -301,7 +306,7 @@ Container _UserInfoCard(String title) {
                 horizontalSpacer(10),
               ],
             ),
-            Icon(
+            const Icon(
               FontAwesomeIcons.angleRight,
               color: Colors.grey,
             )
@@ -353,7 +358,7 @@ Future<dynamic> _showBottomSheet(BuildContext context, {AppUser? buddyUser}) {
             children: [
               CustomSubTitleText(
                 title: 'About ${buddyUser?.lastName}',
-                color: Color(0xFF2B2E4A),
+                color: const Color(0xFF2B2E4A),
               ),
               CustomSubTitleText(
                 align: true,

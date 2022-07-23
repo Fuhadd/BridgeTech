@@ -17,7 +17,7 @@ class DevScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: background,
-      drawer: NavigationDrawer(
+      drawer: const NavigationDrawer(
         pageIndex: 2,
         // user: currentUser,
       ),
@@ -168,11 +168,11 @@ class DevScreen extends StatelessWidget {
               Row(
                 children: [
                   horizontalSpacer(15),
-                  CustomButton(
+                  const CustomButton(
                     title: 'CONFIRM BOOKING',
                   ),
                   horizontalSpacer(20),
-                  CustomButton(
+                  const CustomButton(
                     title: 'RESET',
                   ),
                 ],
@@ -202,7 +202,7 @@ class TimeContainer extends StatelessWidget {
       //width: 60,
       child: Text(
         time,
-        style: TextStyle(
+        style: const TextStyle(
             fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
       ),
     );

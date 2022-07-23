@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urban_hive_test/Models/models.dart';
 
@@ -33,6 +32,36 @@ class FirestoreRepository {
           'phoneNumber': phoneNumber,
           'accountCreated': accountCreated,
           'matchedUsers': [uid.toString()],
+        },
+        SetOptions(
+          merge: true,
+        ));
+    return;
+  }
+
+  Future<void> updateUserCredentials({
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String bio,
+    required String technical,
+    required String looking,
+    // required List<String> skills,
+  }) async {
+    String? uid = firebaseAuth.currentUser?.uid.toString();
+    await firebaseFirestore.doc(uid.toString()).set(
+        {
+          'id': uid.toString(),
+          'email': email,
+          'firstName': firstName,
+          'lastName': lastName,
+          'phoneNumber': phoneNumber,
+
+          // 'skills': skills,
+          'bio': bio,
+          'technical': technical,
+          'looking': looking,
         },
         SetOptions(
           merge: true,
@@ -87,6 +116,7 @@ class FirestoreRepository {
       }
       //print(snapshot);
     } catch (error) {}
+    return null;
   }
 
   Future<AppUser?> getUsersCredentialsbyid(String uid) async {
@@ -102,6 +132,7 @@ class FirestoreRepository {
       }
       //print(snapshot);
     } catch (error) {}
+    return null;
   }
 
   Future<bool> checkUserBio() async {
@@ -125,43 +156,6 @@ class FirestoreRepository {
     }
   }
 
-  Future<List<AppUser?>> getAllUsers(String id) async {
-    List<String> test = [];
-    List<AppUser?> allAppUsers = [];
-    int? userLength;
-    int counter = 0;
-    try {
-      print(id);
-      final allUsers = await firebaseFirestore.get();
-
-      allUsers.docs.forEach((element) async {
-        userLength = element.reference.id.length;
-        var userId = element.reference.id;
-        test.add(userId);
-
-        final appUser = firebaseFirestore.doc(userId);
-
-        final snapshot = await appUser.get();
-
-        if (snapshot.exists) {
-          if (id != userId) {
-            var userInfo = AppUser.fromJson(snapshot.data());
-
-            allAppUsers.add(userInfo);
-            counter = counter + 1;
-            print("This is counter ${counter}");
-          }
-        }
-      });
-
-      await Future.delayed(Duration(seconds: 3));
-      //   print(chats); //snapshots();
-      return allAppUsers;
-    } catch (error) {
-      return [];
-    }
-  }
-
   Future<AppUser?> saveUsersCredentialslocal() async {
     try {
       AppUser? user = await getUsersCredentials();
@@ -173,6 +167,7 @@ class FirestoreRepository {
         await prefs.setString('user', userJson);
       }
     } catch (error) {}
+    return null;
   }
 
   Future<void> saveMoreUsersInfo(
@@ -193,9 +188,9 @@ class FirestoreRepository {
 
   createChatRoomId(String a, String b) {
     if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
-      return "$b\_$a";
+      return "${b}_$a";
     } else {
-      return "$a\_$b";
+      return "${a}_$b";
     }
   }
 
@@ -244,6 +239,7 @@ class FirestoreRepository {
         .catchError((e) {
       print(e.toString());
     });
+    return null;
   }
 
   Future<void> sendMessage(
@@ -318,6 +314,17 @@ class FirestoreRepository {
         .snapshots();
   }
 
+  Future<Stream<DocumentSnapshot>> getCurrentUserProfile() async {
+    String? uid = firebaseAuth.currentUser?.uid.toString();
+    return firebaseFirestore.doc(uid).snapshots();
+    // .where("users", arrayContains: currentUserId)
+    // .where("isAccept", isEqualTo: "0")
+    // .where("isReject", isEqualTo: "0")
+    // .where("sentBy", isEqualTo: currentUserId)
+    // // .orderBy("sentBy", descending: true)
+    // .snapshots();
+  }
+
   Future<Stream<QuerySnapshot>> getFailedConnections(
       String currentUserId) async {
     return matchFirebaseFirestore
@@ -388,9 +395,11 @@ class FirestoreRepository {
         .catchError((e) {
       print(e.toString());
     });
+    return null;
   }
 
   Future<void>? acceptInvite(String matchId) {
+    print(matchId);
     matchFirebaseFirestore.doc(matchId).set(
         {
           "isAccept": "1",
@@ -400,6 +409,7 @@ class FirestoreRepository {
         )).catchError((e) {
       print(e.toString());
     });
+    return null;
   }
 
   Future<void>? rejectInvite(String matchId) {
@@ -412,6 +422,7 @@ class FirestoreRepository {
         )).catchError((e) {
       print(e.toString());
     });
+    return null;
   }
 
   Future<void> initializeMatches(

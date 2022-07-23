@@ -1,28 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:urban_hive_test/Config/Repositories/firestore_repository.dart';
 import 'package:urban_hive_test/Config/Repositories/user_repository.dart';
 import 'package:urban_hive_test/Helpers/constants.dart';
 import 'package:urban_hive_test/Models/models.dart';
-import 'package:urban_hive_test/Screens/candidate_screen.dart';
-import 'package:urban_hive_test/Screens/dev_screen.dart';
 import 'package:urban_hive_test/Screens/discover_test.dart';
 import 'package:urban_hive_test/Screens/home_page.dart';
 import 'package:urban_hive_test/Screens/inbox_screen.dart';
-import 'package:urban_hive_test/Screens/login_screen.dart';
 import 'package:urban_hive_test/Screens/matched_users_screen.dart';
-import 'package:urban_hive_test/Screens/matches_screen.dart';
 import 'package:urban_hive_test/Screens/requests_screen.dart';
 import 'package:urban_hive_test/Screens/settings.dart';
 // import 'package:urban_hive_test/Screens/profile_screen.dart';
 
 import '../Helpers/sharedPrefs.dart';
-import '../Screens/discover_screen.dart';
-import '../Screens/failed_connection_screen.dart';
 import '../Screens/id_card_screen.dart';
-import '../Screens/sent_request.dart';
-import '../Screens/user_profile_screen.dart';
+import '../Screens/verifyuserbio_screen.dart';
 
 class NavigationDrawer extends StatefulWidget {
   final int pageIndex;
@@ -77,8 +68,7 @@ Widget buildHeader(BuildContext context) {
   return Container(
     height: MediaQuery.of(context).size.height * 0.3,
     decoration: const BoxDecoration(
-        image:
-            const DecorationImage(image: AssetImage('assets/images/Logo.png'))),
+        image: DecorationImage(image: AssetImage('assets/images/Logo.png'))),
   );
 // //
 }
@@ -133,7 +123,7 @@ Widget buildMenuItems(BuildContext context, int pageIndex, AppUser user) {
           onClick: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => HomePage(
+                builder: (context) => const HomePage(
                     // currentUser: user,
                     ),
               ),
@@ -149,7 +139,7 @@ Widget buildMenuItems(BuildContext context, int pageIndex, AppUser user) {
       //     onClick: () {
       //       Navigator.of(context).pushReplacement(
       //         MaterialPageRoute(
-      //           builder: (context) => const DevScreen(),
+      //           builder: (context) => const UserProfileTestScreen(),
       //         ),
       //       );
       //     }),
@@ -179,10 +169,14 @@ Widget buildMenuItems(BuildContext context, int pageIndex, AppUser user) {
           onClick: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => ProfileScreen(
-                    // currentUser: user,
-                    ),
-              ),
+                  builder: (context) => VerifyBioScreen(
+                        user: user,
+                      )
+
+                  // ProfileScreen(
+                  //     // currentUser: user,
+                  //     ),
+                  ),
             );
           }),
       SideMenus(
@@ -190,7 +184,7 @@ Widget buildMenuItems(BuildContext context, int pageIndex, AppUser user) {
               ? const Color.fromRGBO(255, 189, 89, 1)
               : Colors.white,
           icon: FontAwesomeIcons.gears,
-          title: 'Discover',
+          title: 'Candidates',
           padding: 40,
           onClick: () async {
             int? initialPage =
@@ -269,20 +263,20 @@ Widget buildMenuItems(BuildContext context, int pageIndex, AppUser user) {
                   builder: (context) => MatchedUsersScreen(currentUser: user)),
             );
           }),
-      SideMenus(
-          color: pageIndex == 13
-              ? const Color.fromRGBO(255, 189, 89, 1)
-              : Colors.white,
-          icon: Icons.person_add_alt,
-          title: 'Sent Requests',
-          padding: 40,
-          onClick: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => SentRequestScreen(currentUser: user),
-              ),
-            );
-          }),
+      // SideMenus(
+      //     color: pageIndex == 13
+      //         ? const Color.fromRGBO(255, 189, 89, 1)
+      //         : Colors.white,
+      //     icon: Icons.person_add_alt,
+      //     title: 'Sent Requests',
+      //     padding: 40,
+      //     onClick: () {
+      //       Navigator.of(context).pushReplacement(
+      //         MaterialPageRoute(
+      //           builder: (context) => SentRequestScreen(currentUser: user),
+      //         ),
+      //       );
+      //     }),
 
       SideMenus(
           color: pageIndex == 10
@@ -299,20 +293,20 @@ Widget buildMenuItems(BuildContext context, int pageIndex, AppUser user) {
             );
           }),
 
-      SideMenus(
-          color: pageIndex == 11
-              ? const Color.fromRGBO(255, 189, 89, 1)
-              : Colors.white,
-          icon: Icons.cancel_outlined,
-          title: 'Failed',
-          padding: 40,
-          onClick: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => FailedConnectScreen(currentUser: user),
-              ),
-            );
-          }),
+      // SideMenus(
+      //     color: pageIndex == 11
+      //         ? const Color.fromRGBO(255, 189, 89, 1)
+      //         : Colors.white,
+      //     icon: Icons.cancel_outlined,
+      //     title: 'Failed',
+      //     padding: 40,
+      //     onClick: () {
+      //       Navigator.of(context).pushReplacement(
+      //         MaterialPageRoute(
+      //           builder: (context) => FailedConnectScreen(currentUser: user),
+      //         ),
+      //       );
+      //     }),
 
       SideDivider(),
 

@@ -1,19 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
-
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 
 import 'package:urban_hive_test/Models/models.dart';
 
 import '../Config/Repositories/user_repository.dart';
 import '../Helpers/colors.dart';
 import '../Helpers/constants.dart';
+import '../Widgets/constant_widget.dart';
 import '../Widgets/navigation_drawer.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
   static const routeName = '/profile';
 
   @override
@@ -51,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       left: false,
       bottom: false,
       child: Scaffold(
-          drawer: NavigationDrawer(
+          drawer: const NavigationDrawer(
             pageIndex: 4,
           ),
           extendBodyBehindAppBar: true,
@@ -59,7 +55,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             backgroundColor: Colors.transparent,
             elevation: 0,
           ),
-          body: buildUserPage(context, currentUser!)),
+          body: currentUser != null
+              ? buildUserPage(context, currentUser!)
+              : loader()),
     );
   }
 }
@@ -94,7 +92,7 @@ Widget buildUserPage(BuildContext context, AppUser user) {
                   Colors.purple,
                   Yellow,
                 ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                     bottomRight: Radius.circular(20.0),
                     bottomLeft: Radius.circular(20.0)),
               ),
@@ -107,6 +105,26 @@ Widget buildUserPage(BuildContext context, AppUser user) {
             //   ),
             // ),
           ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Align(
+            alignment: Alignment.topRight,
+            child: TextButton.icon(
+              onPressed: () {
+                // showBottomSheet(context,
+                //       gender: user.gender,
+                //       userName: user.userName,
+                //       userEmail: user.email,
+                //       userPhone: user.phone);
+              },
+              icon: const Icon(Icons.edit, color: Colors.pink),
+              label: const Text(
+                'Edit Profile',
+                style: TextStyle(color: Colors.pink),
+              ),
+            ),
+          ),
         ),
         verticalSpacer(20),
         UserFields(
@@ -227,3 +245,140 @@ Widget UserFields(BuildContext context,
     ),
   );
 }
+
+// Future<dynamic> showBottomSheet(BuildContext context,
+//     {var phoneNumber,
+//     String? userName,
+//     String? userEmail,
+//     String? userPhone,
+//     String? gender}) {
+//   final _formKey = GlobalKey<FormBuilderState>();
+//   FirestoreRepository firestoreRepository = FirestoreRepository();
+//   return showModalBottomSheet(
+
+
+//       isScrollControlled: true,
+//       shape: const RoundedRectangleBorder(
+//         borderRadius: BorderRadius.vertical(
+//           top: Radius.circular(20),
+//         ),
+//       ),
+//       context: context,
+//       builder: (context) {
+//         return Container(
+//           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               FormBuilder(
+//                 key: _formKey,
+//                 child: Column(
+//                   children: [
+//                     customFormBuilderTextField(
+//                       'username',
+//                       Icons.person,
+//                       null,
+//                       'User Name',
+//                       initialValue: userName,
+//                       validator: FormBuilderValidators.compose(
+//                         [
+//                           FormBuilderValidators.minLength(context, 4,
+//                               errorText:
+//                                   'A valid username should be greater than 4 characters '),
+//                         ],
+//                       ),
+//                     ),
+//                     vericalSpacer(25),
+//                     customFormBuilderTextField(
+//                       'email',
+//                       Icons.mail,
+//                       null,
+//                       'Email',
+//                       initialValue: userEmail,
+//                       validator: FormBuilderValidators.compose(
+//                         [
+//                           FormBuilderValidators.email(context,
+//                               errorText: 'Provided email not valid '),
+//                           FormBuilderValidators.required(context,
+//                               errorText: 'Email field cannot be empty '),
+//                         ],
+//                       ),
+//                     ),
+//                     vericalSpacer(25),
+//                     IntlPhoneField(
+//                       initialValue: userPhone,
+//                       //controller: phoneController,
+//                       decoration:
+//                           customFormDecoration('Phone Number', null, null),
+//                       initialCountryCode: 'NG',
+//                       onChanged: (phone) {
+//                         phoneNumber = phone.completeNumber;
+//                         print(phone.completeNumber);
+//                       },
+//                     ),
+
+//                     vericalSpacer(25),
+
+//                     vericalSpacer(30),
+
+//                     CustomButton(
+//                       formKey: _formKey,
+//                       onPressed: () {
+//                         var validate = _formKey.currentState?.validate();
+//                         if (validate == true) {
+//                           _formKey.currentState?.save();
+//                           var username =
+//                               _formKey.currentState?.fields['username']?.value;
+//                           var email =
+//                               _formKey.currentState?.fields['email']?.value;
+
+//                           var phone = phoneNumber;
+
+//                           firestoreRepository.saveUserCredentials(
+//                               username, email, phone, gender);
+
+//                           Navigator.pop(context);
+//                         }
+//                       },
+//                       child: Text(
+//                         'Update details',
+//                         style: Theme.of(context)
+//                             .textTheme
+//                             .headline2!
+//                             .copyWith(color: Colors.white),
+//                       ),
+//                     ),
+//                     vericalSpacer(20),
+//                     // BlocListener<SignupBloc, SignupState>(
+//                     //     listener: (context, state) {
+//                     //   if (state is SignupSuccessful) {
+//                     //     Navigator.pushReplacementNamed(
+//                     //         context, SignUpSecondScreen.routeName);
+//                     //   }
+//                     // }, child: BlocBuilder<SignupBloc, SignupState>(
+//                     //   builder: ((context, state) {
+//                     //     if (state is SignupInProgress) {
+//                     //       return const SpinKitRotatingPlain(
+//                     //         color: Colors.red,
+//                     //       );
+//                     //       print(state);
+//                     //     } else if (state is SignupFailed) {
+//                     //       return Text(state.message);
+//                     //       print(state);
+//                     //     } else if (state is SignupInProgress) {
+//                     //       return Container();
+//                     //       print(state);
+//                     //     }
+//                     //     return Container();
+//                     // }),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         );
+//       });
+
+
+
+// }

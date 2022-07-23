@@ -115,7 +115,7 @@ class CustomButton extends StatelessWidget {
 
   const CustomButton({
     required this.title,
-    this.onTap = null,
+    this.onTap,
     this.color = Colors.black,
     this.textcolor = Colors.white,
     Key? key,
@@ -157,8 +157,8 @@ class SmallCustomButton extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: const [
           BoxShadow(blurRadius: 5, offset: Offset(0, 5), color: Colors.grey),
-          BoxShadow(offset: const Offset(-5, 0), color: Colors.black),
-          BoxShadow(color: Colors.black, offset: const Offset(5, 0)),
+          BoxShadow(offset: Offset(-5, 0), color: Colors.black),
+          BoxShadow(color: Colors.black, offset: Offset(5, 0)),
         ],
         color: Colors.black,
         borderRadius: BorderRadius.circular(10),
@@ -192,8 +192,8 @@ class SmallCustomRowButton extends StatelessWidget {
         decoration: BoxDecoration(
           boxShadow: const [
             BoxShadow(blurRadius: 5, offset: Offset(0, 5), color: Colors.grey),
-            BoxShadow(offset: const Offset(-5, 0), color: Colors.white),
-            BoxShadow(color: Colors.white, offset: const Offset(5, 0)),
+            BoxShadow(offset: Offset(-5, 0), color: Colors.white),
+            BoxShadow(color: Colors.white, offset: Offset(5, 0)),
           ],
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -244,7 +244,7 @@ class SmallCustomAcceptButton extends StatelessWidget {
               const BoxShadow(
                   blurRadius: 5, offset: Offset(0, 5), color: Colors.grey),
               BoxShadow(
-                  offset: Offset(-5, 0),
+                  offset: const Offset(-5, 0),
                   color: isaccept ? Yellow : Colors.white),
               BoxShadow(
                   color: isaccept ? Yellow : Colors.white,
@@ -282,7 +282,7 @@ Future<dynamic> showdialog(BuildContext context) {
       builder: (context) {
         return SimpleDialog(
           elevation: 0,
-          contentPadding: EdgeInsets.all(90),
+          contentPadding: const EdgeInsets.all(90),
           children: [loader()],
           backgroundColor: Colors.transparent,
         );
@@ -293,4 +293,118 @@ Widget loader({double size = 50}) {
   return SpinKitWave(
     color: Yellow,
   );
+}
+
+class CustomButton1 extends StatelessWidget {
+  final String title;
+  final onTap;
+  final Color color;
+  final Color textcolor;
+
+  const CustomButton1({
+    required this.title,
+    this.onTap,
+    this.color = Colors.black,
+    this.textcolor = Colors.white,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (onTap == null) ? () {} : onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+        decoration: BoxDecoration(
+            color: color, borderRadius: BorderRadius.circular(15)),
+        width: double.infinity,
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 20, color: textcolor),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomBioText extends StatelessWidget {
+  final String title;
+  final double size;
+  final Color? color;
+  final bool align;
+  FontWeight? fontWeight;
+  CustomBioText({
+    required this.title,
+    required this.color,
+    this.size = 17,
+    this.align = false,
+    this.fontWeight = FontWeight.bold,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: align
+          ? Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.headline2!.copyWith(
+                    fontSize: size, fontWeight: fontWeight, color: color),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+              ))
+          : Align(
+              //alignment: Alignment.centerLeft,
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.headline2!.copyWith(
+                    fontSize: size, fontWeight: fontWeight, color: color),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+    );
+  }
+}
+
+class ClickableSmallCustomButton extends StatelessWidget {
+  final String title;
+  void Function()? onTap;
+
+  ClickableSmallCustomButton({
+    required this.title,
+    this.onTap,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+        decoration: BoxDecoration(
+          boxShadow: const [
+            BoxShadow(blurRadius: 5, offset: Offset(0, 5), color: Colors.grey),
+            BoxShadow(offset: Offset(-5, 0), color: Colors.black),
+            BoxShadow(color: Colors.black, offset: Offset(5, 0)),
+          ],
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        //width: ,
+        // height: 20,
+        child: Text(
+          title,
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+        ),
+      ),
+    );
+  }
 }

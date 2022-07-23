@@ -128,7 +128,7 @@ class ViewOtherProfiles extends StatelessWidget {
                   verticalSpacer(30),
                   Container(
                       height: 100,
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       width: double.infinity,
                       color: Colors.white,
                       child: FittedBox(
@@ -147,7 +147,7 @@ class ViewOtherProfiles extends StatelessWidget {
                                         color: Yellow,
                                       )),
                             horizontalSpacer(10),
-                            VerticalDivider(
+                            const VerticalDivider(
                               indent: 20,
                               endIndent: 20,
                               color: Colors.grey,
@@ -163,17 +163,18 @@ class ViewOtherProfiles extends StatelessWidget {
                           ],
                         ),
                       )),
-                  verticalSpacer(30),
+                  verticalSpacer(20),
                   CustomSubTitleText(
                     align: true,
                     title: 'General Information',
-                    color: Color(0xFF2B2E4A),
+                    color: const Color(0xFF2B2E4A),
                   ),
-                  verticalSpacer(25),
-                  GestureDetector(
-                      onTap: (() =>
-                          _showBottomSheet(context, buddyUser: buddyUser)),
-                      child: _UserInfoCard('title')),
+                  verticalSpacer(15),
+                  CustomBioText(
+                    align: true,
+                    title: buddyUser.bio!,
+                    color: Colors.grey,
+                  ),
                   verticalSpacer(30),
                 ],
               ),
@@ -215,7 +216,7 @@ class ViewOtherProfiles extends StatelessWidget {
                   horizontalSpacer(10),
                 ],
               ),
-              Icon(
+              const Icon(
                 FontAwesomeIcons.angleRight,
                 color: Colors.grey,
               )
@@ -268,7 +269,7 @@ Future<dynamic> _showBottomSheet(BuildContext context, {AppUser? buddyUser}) {
             children: [
               CustomSubTitleText(
                 title: 'About ${buddyUser?.lastName}',
-                color: Color(0xFF2B2E4A),
+                color: const Color(0xFF2B2E4A),
               ),
               CustomSubTitleText(
                 align: true,

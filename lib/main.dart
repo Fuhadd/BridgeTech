@@ -12,17 +12,9 @@ import 'package:urban_hive_test/Config/Repositories/firestore_repository.dart';
 import 'package:urban_hive_test/Config/Repositories/user_repository.dart';
 import 'package:urban_hive_test/Helpers/theme.dart';
 import 'package:urban_hive_test/Models/models.dart' as appUser;
-import 'package:urban_hive_test/Screens/User_Screen.dart';
-import 'package:urban_hive_test/Screens/candidate_screen.dart';
-import 'package:urban_hive_test/Screens/chat_screen.dart';
-import 'package:urban_hive_test/Screens/dev_screen.dart';
-import 'package:urban_hive_test/Screens/discover_screen.dart';
-import 'package:urban_hive_test/Screens/discover_test.dart';
 import 'package:urban_hive_test/Screens/forgot_password_screen.dart';
 import 'package:urban_hive_test/Screens/home_page.dart';
-import 'package:urban_hive_test/Screens/inbox_screen.dart';
 import 'package:urban_hive_test/Screens/login_screen.dart';
-import 'package:urban_hive_test/Screens/more_info_screen.dart';
 import 'package:urban_hive_test/Screens/settings.dart';
 import 'package:urban_hive_test/Screens/signup_screen.dart';
 import 'package:urban_hive_test/Screens/splash_screen.dart';
@@ -113,11 +105,13 @@ class MyApp extends StatelessWidget {
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return SplashScreen();
+                  return const SplashScreen();
                 } else if (snapshot.hasData) {
-                  return VerifyBioScreen(
-                    user: currentUser,
-                  );
+                  return const HomePage();
+
+                  // VerifyBioScreen(
+                  //   user: currentUser,
+                  // );
 
                   // VerifyEmailScreen(
                   //   user: currentUser,
@@ -130,13 +124,13 @@ class MyApp extends StatelessWidget {
           routes: {
             SignUpScreen.routeName: (context) => SignUpScreen(),
             LoginScreen.routeName: (context) => LoginScreen(),
-            HomePage.routeName: (context) => HomePage(),
+            HomePage.routeName: (context) => const HomePage(),
             ForgotPassword.routeName: (context) => ForgotPassword(),
             VerifyBioScreen.routeName: (context) =>
                 VerifyBioScreen(user: currentUser),
             VerifyEmailScreen.routeName: (context) =>
                 VerifyEmailScreen(user: currentUser),
-            SettingsScreen.routeName: (context) => SettingsScreen(),
+            SettingsScreen.routeName: (context) => const SettingsScreen(),
           },
         ),
       ),
