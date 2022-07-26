@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,20 +23,59 @@ import 'package:urban_hive_test/Screens/verifyuserbio_screen.dart';
 
 import 'Config/Blocs/auth_bloc/auth_bloc.dart';
 import 'Config/Blocs/signup_bloc/signup_bloc.dart';
+import 'Config/Services/local_push_notification.dart';
 import 'Screens/email_verification_screen.dart';
+import 'firebase_options.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-      name: 'bridgetech',
-      options: const FirebaseOptions(
-        apiKey: 'AIzaSyAbVs1nFKJZOw21gQGWBD3gRUpkZKQr8ww',
-        appId: '1:989951728763:android:72607bf6f013f1f6e416de',
-        messagingSenderId: '',
-        projectId: 'bridge-tech-advance',
-        storageBucket:
-            'gs://bridge-tech-advance.appspot.com/', // Your projectId
-      ));
+    options: DefaultFirebaseOptions.currentPlatform,
+    // name: 'bridgetech',
+    // options:
+    // const FirebaseOptions(
+    //   apiKey: 'AIzaSyAbVs1nFKJZOw21gQGWBD3gRUpkZKQr8ww',
+    //   appId: '1:989951728763:android:72607bf6f013f1f6e416de',
+    //   messagingSenderId: '',
+    //   projectId: 'bridge-tech-advance',
+    //   storageBucket:
+    //       'gs://bridge-tech-advance.appspot.com/', // Your projectId
+    // )
+  );
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  print('User granted permission: ${settings.authorizationStatus}');
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Got a message whilst in the foreground!');
+    print('Message data: ${message.data}');
+
+    if (message.notification != null) {
+      print('Message also contained a notification: ${message.notification}');
+    }
+  });
+  LocalNotificationService.initialize();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  //  WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
 
   final prefs = await SharedPreferences.getInstance();
 

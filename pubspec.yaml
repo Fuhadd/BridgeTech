@@ -34,16 +34,19 @@ dependencies:
   firebase_auth: ^3.3.20
   firebase_core: ^1.18.0
   firebase_database: ^9.0.16
+  firebase_messaging: ^12.0.1
   firebase_storage: ^10.2.18
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.1
   flutter_form_builder: ^7.2.1
+  flutter_local_notifications: ^9.7.0
   flutter_native_splash: ^2.1.2
   flutter_spinkit: ^5.1.0
   font_awesome_flutter: ^10.1.0
   form_builder_validators: ^8.1.1
   grouped_list: ^5.1.2
+  http: ^0.13.4
   image_picker: ^0.8.5+3
   intl: ^0.17.0
   qr_flutter: ^4.0.0
@@ -52,7 +55,7 @@ dependencies:
   shimmer: ^2.0.0
 
 dev_dependencies:
-  flutter_lints: ^1.0.0
+  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
 
@@ -99,6 +102,5 @@ flutter:
         - asset: assets/fonts/Lato/Lato-Bold.ttf
         - asset: assets/fonts/Lato/Lato-Italic.ttf
           weight: 700
-  
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

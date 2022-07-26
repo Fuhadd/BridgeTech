@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:grouped_list/grouped_list.dart';
-import 'package:intl/intl.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:urban_hive_test/Helpers/constants.dart';
 import 'package:urban_hive_test/Models/models.dart';
 import 'package:urban_hive_test/Widgets/constant_widget.dart';
@@ -90,13 +87,13 @@ class _InboxscreenState extends State<Inboxscreen> {
                   DocumentSnapshot ds = snapshot.data!.docs[index];
                   int? count = snapshot.data?.docs.length;
                   return count == 0
-                      ? NoContentWidget(mainText: 'Chat Screen')
+                      ? const NoContentWidget(mainText: 'Chat Screen')
                       : FutureBuilder<AppUser?>(
                           future: FirestoreRepository().getThisUserInfo(
                               ds.id, widget.currentUser.id.toString()),
                           builder: (BuildContext context, snapshot) {
                             if (snapshot.hasError) {
-                              return Text("Something went wrong");
+                              return const Text("Something went wrong");
                             }
 
                             if (snapshot.connectionState ==
@@ -177,20 +174,6 @@ class _InboxscreenState extends State<Inboxscreen> {
     print(234);
     getChatRooms();
 
-    // FirestoreRepository().getAllChats().then((val) {
-    //   setState(() {
-    //     test = val;
-    //   });
-    // });
-    // FirestoreRepository().getChatsPlusUser().then((val) {
-    //   setState(() {
-    //     userMap = val;
-    //     val.forEach((element) async {
-    //       String id = element.chatRoomId;
-    //       chats = await FirestoreRepository().getChats(id);
-    //     });
-    //   });
-    // }));
     super.initState();
   }
 
@@ -199,7 +182,7 @@ class _InboxscreenState extends State<Inboxscreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: background,
-        drawer: NavigationDrawer(
+        drawer: const NavigationDrawer(
           pageIndex: 6,
           // user: widget.currentUser,
         ),
@@ -218,7 +201,7 @@ class _InboxscreenState extends State<Inboxscreen> {
 }
 
 class InboxPage extends StatelessWidget {
-  InboxPage({
+  const InboxPage({
     required this.lastMessageTime,
     required this.buddyUser,
     required this.mainUser,
@@ -258,7 +241,7 @@ class InboxPage extends StatelessWidget {
               color: background,
               child: ListTile(
                 horizontalTitleGap: 20,
-                contentPadding: EdgeInsets.all(10),
+                contentPadding: const EdgeInsets.all(10),
 
                 title: CustomSubTitleText(
                   align: true,
@@ -269,7 +252,7 @@ class InboxPage extends StatelessWidget {
                 subtitle: Text(
                   lastMessage,
                   softWrap: true,
-                  style: TextStyle(fontSize: 15),
+                  style: const TextStyle(fontSize: 15),
                 ),
                 //Text(Conversation.conversations[index].name),
                 leading: CircleAvatar(
@@ -277,7 +260,7 @@ class InboxPage extends StatelessWidget {
                 ),
                 // subtitle: Text("Conversation.conversations[index].content"),
                 trailing: Text(lastMessageTime.toString(),
-                    style: TextStyle(fontSize: 12)),
+                    style: const TextStyle(fontSize: 12)),
               )),
         ),
       ),

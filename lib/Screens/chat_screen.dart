@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:urban_hive_test/Config/Repositories/firestore_repository.dart';
+import 'package:urban_hive_test/Config/Repositories/notification_repository.dart';
 import 'package:urban_hive_test/Helpers/colors.dart';
 import 'package:urban_hive_test/Helpers/constants.dart';
 import 'package:urban_hive_test/Widgets/constant_widget.dart';
@@ -42,7 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
           // print(snapshot.data!.docs[0].get("time"));
 
           {
-            return snapshot.hasData && snapshot.data!.docs.length > 0
+            return snapshot.hasData && snapshot.data!.docs.isNotEmpty
                 ? ContainsChatScreen(
                     snapshot: snapshot,
                     currentUser: widget.currentUser,
@@ -61,6 +63,15 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {
         chats = val;
       });
+    });
+
+    FirebaseMessaging.instance.getInitialMessage();
+
+    FirebaseMessaging.onMessage.listen((event) {
+      // //Step 1 debug
+      // print('FCM message received');
+      //Step 7 here
+      // LocalNotificationService.display(event);
     });
     super.initState();
   }
@@ -97,6 +108,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   horizontalSpacer(10),
                   GestureDetector(
                     onTap: () async {
+                      FocusScope.of(context).unfocus();
                       DateTime time = DateTime.now();
                       var validate = _formKey.currentState?.validate();
                       if (validate == true) {
@@ -121,8 +133,15 @@ class _ChatScreenState extends State<ChatScreen> {
                             chatRoomId, lastMessageInfoMap);
                         setState(() {
                           _formKey.currentState?.reset();
-                          FocusScope.of(context).unfocus();
                         });
+                        print('about to');
+                        var token = await FirestoreRepository()
+                            .getUserTokenbyid(widget.invitedUser.id!);
+                        await NotificationRepository().sendInboxNotification(
+                            message,
+                            token,
+                            '${widget.currentUser.lastName} ${widget.currentUser.firstName}');
+                        print('done');
                       }
                     },
                     child: Container(
@@ -130,7 +149,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       width: 45,
                       decoration:
                           BoxDecoration(color: Yellow, shape: BoxShape.circle),
-                      child: Icon(
+                      child: const Icon(
                         FontAwesomeIcons.paperPlane,
                         color: Colors.white,
                         size: 24,
@@ -209,7 +228,7 @@ class ContainsChatScreen extends StatelessWidget {
     bool sentByMe;
     return Expanded(
       child: GroupedListView<QueryDocumentSnapshot<Object?>, DateTime>(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         reverse: true,
         order: GroupedListOrder.DESC,
         useStickyGroupSeparators: true,
@@ -228,7 +247,7 @@ class ContainsChatScreen extends StatelessWidget {
             child: Card(
               color: Theme.of(context).primaryColor,
               child: Padding(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: Text(
                   DateFormat.yMMMd().format(snapshot.get("time").toDate()),
                   //style: TextStyle(color: Colors.white),
@@ -265,14 +284,14 @@ class ContainsChatScreen extends StatelessWidget {
                   : Yellow,
               elevation: 8,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                 child: Text(snapshot.get("message")),
               ),
             ),
           ),
         ),
       ),
-    
     );
   }
 }

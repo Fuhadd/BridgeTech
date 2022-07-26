@@ -101,7 +101,7 @@ PreferredSizeWidget ChatAppar(
           ),
         ),
         CustomSubTitleText(
-          color: Color(0xFF2B2E4A),
+          color: const Color(0xFF2B2E4A),
           title: appBarTitle.toUpperCase(),
           size: 18,
         ),
@@ -213,57 +213,57 @@ FormBuilderChoiceChip customFormBuilderChoiceChip(
   );
 }
 
-var timeoptions = const [
-  FormBuilderFieldOption(
+List<FormBuilderChipOption<dynamic>> timeoptions = const [
+  FormBuilderChipOption(
     value: '9:00',
     child: Text(
       '9:00',
       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
     ),
   ),
-  FormBuilderFieldOption(
+  FormBuilderChipOption(
     value: '10:00',
     child: Text(
       '10:00',
       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
     ),
   ),
-  FormBuilderFieldOption(
+  FormBuilderChipOption(
     value: '11:00',
     child: Text(
       '11:00',
       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
     ),
   ),
-  FormBuilderFieldOption(
+  FormBuilderChipOption(
     value: '12:00',
     child: Text(
       '12:00',
       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
     ),
   ),
-  FormBuilderFieldOption(
+  FormBuilderChipOption(
     value: '13:00',
     child: Text(
       '13:00',
       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
     ),
   ),
-  FormBuilderFieldOption(
+  FormBuilderChipOption(
     value: '14:00',
     child: Text(
       '14:00',
       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
     ),
   ),
-  FormBuilderFieldOption(
+  FormBuilderChipOption(
     value: '15:00',
     child: Text(
       '15:00',
       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
     ),
   ),
-  FormBuilderFieldOption(
+  FormBuilderChipOption(
     value: '16:00',
     child: Text(
       '16:00',
@@ -280,7 +280,7 @@ InputDecoration customFormDecoration(String? hintText, String labelText,
       prefix: prefix,
       helperText: helperText,
       helperMaxLines: 7,
-      helperStyle: TextStyle(fontSize: 13),
+      helperStyle: const TextStyle(fontSize: 13),
       floatingLabelStyle: TextStyle(color: Yellow),
       fillColor: Yellow,
       focusedBorder:
@@ -294,7 +294,7 @@ InputDecoration customFormDecoration(String? hintText, String labelText,
         size: 20,
       ),
       labelText: labelText,
-      labelStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold));
+      labelStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold));
 }
 
 InputDecoration customMessageDecoration(String? hintText, String labelText,
@@ -306,7 +306,7 @@ InputDecoration customMessageDecoration(String? hintText, String labelText,
       prefix: prefix,
       helperText: helperText,
       helperMaxLines: 7,
-      helperStyle: TextStyle(fontSize: 13),
+      helperStyle: const TextStyle(fontSize: 13),
       floatingLabelStyle: TextStyle(color: Yellow),
       fillColor: Yellow,
       focusedBorder:
@@ -316,7 +316,7 @@ InputDecoration customMessageDecoration(String? hintText, String labelText,
         size: 20,
       ),
       labelText: labelText,
-      labelStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold));
+      labelStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold));
 }
 
 FormBuilderTextField customFormBuilderTextField(
@@ -410,7 +410,8 @@ Widget CustomFormBuilderRadioGroup1(
       decoration: InputDecoration(
           border: InputBorder.none,
           labelText: labelText,
-          labelStyle: TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
+          labelStyle:
+              const TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
       options: const [
         FormBuilderFieldOption(value: '1', child: Text('Yes')),
         FormBuilderFieldOption(value: '0', child: Text('No')),
@@ -440,7 +441,8 @@ Widget CustomFormBuilderRadioGroup2(
       decoration: InputDecoration(
           border: InputBorder.none,
           labelText: labelText,
-          labelStyle: TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
+          labelStyle:
+              const TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
       options: const [
         FormBuilderFieldOption(value: '1', child: Text('Technical')),
         FormBuilderFieldOption(value: '0', child: Text('Non Technical')),

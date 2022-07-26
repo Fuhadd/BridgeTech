@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>989951728763-ivok6mie48ltar2np198lsp15ko2koba.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.989951728763-ivok6mie48ltar2np198lsp15ko2koba</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAG1ywjEBmqiE9P1XVLedhDpk8g-1kScNo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>989951728763</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.urbanHiveTest</string>
+	<key>PROJECT_ID</key>
+	<string>bridge-tech-advance</string>
+	<key>STORAGE_BUCKET</key>
+	<string>bridge-tech-advance.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:989951728763:ios:7307412c7ba04e3ee416de</string>
+</dict>
+</plist>

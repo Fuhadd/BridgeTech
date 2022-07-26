@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:urban_hive_test/Helpers/colors.dart';
@@ -12,6 +13,7 @@ import 'package:urban_hive_test/Widgets/navigation_drawer.dart';
 
 import '../Config/Repositories/firestore_repository.dart';
 import '../Config/Repositories/user_repository.dart';
+import '../Config/Services/local_push_notification.dart';
 import '../Models/models.dart';
 import '../Widgets/constant_widget.dart';
 import 'matched_users_screen.dart';
@@ -28,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   AppUser? currentUser;
   List<AppUser> users = [];
   Stream<QuerySnapshot<Object?>>? userRequestStream;
+  Stream<QuerySnapshot<Object?>>? userMessagesStream;
   Stream<QuerySnapshot<Object?>>? matchedUsersStream;
 
   Future<AppUser> getMyInfoFromSharedPreference() async {
@@ -43,7 +46,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   doThisOnLaunch() async {
-    await getMyInfoFromSharedPreference();
+    await FirestoreRepository().storeNotificationToken();
   }
 
   @override
@@ -66,6 +69,22 @@ class _HomePageState extends State<HomePage> {
         userRequestStream = value;
       });
     });
+
+    FirestoreRepository().getChatRooms(uid).then((value) {
+      setState(() {
+        userMessagesStream = value;
+      });
+    });
+    FirebaseMessaging.instance.getInitialMessage();
+
+    FirebaseMessaging.onMessage.listen((event) {
+      // //Step 1 debug
+      // print('FCM message received');
+      //Step 7 here
+      LocalNotificationService.display(event);
+    });
+
+    doThisOnLaunch();
 
     super.initState();
   }
@@ -392,60 +411,96 @@ class _HomePageState extends State<HomePage> {
                           }
                         },
                       ),
+                      verticalSpacer(40),
+                      StreamBuilder(
+                        stream: userMessagesStream,
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData &&
+                              snapshot.data?.docs.length != 0) {
+                            return ListView.builder(
+                                itemCount: 1,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  DocumentSnapshot ds = snapshot.data!.docs[0];
+                                  int? count = snapshot.data?.docs.length;
+                                  return FutureBuilder<AppUser?>(
+                                      future: FirestoreRepository()
+                                          .getThisUserInfo(ds.id,
+                                              currentUser!.id.toString()),
+                                      builder:
+                                          (BuildContext context, snapshot) {
+                                        if (snapshot.hasError) {
+                                          return const Text(
+                                              "Something went wrong");
+                                        }
+
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const LoadingRecentMessageContainer();
+                                        }
+
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.hasData &&
+                                            snapshot.data != null) {
+                                          final user = snapshot.data!;
+                                          users = [];
+                                          users.add(user);
+
+                                          final time = DateTime.now()
+                                              .difference(
+                                                  ds["lastMessageSendTime"]
+                                                      .toDate());
+                                          print("This is time");
+                                          final convertedTime =
+                                              (time.inSeconds);
+
+                                          DateTime formattedDate =
+                                              (ds["lastMessageSendTime"]
+                                                  .toDate());
+                                          print(formattedDate);
+
+                                          String? finalTime;
+                                          if (convertedTime < 60) {
+                                            finalTime =
+                                                "${time.inSeconds} seconds ago";
+                                          } else if (convertedTime > 60 &&
+                                              convertedTime < 3600) {
+                                            finalTime =
+                                                "${time.inMinutes} minutes ago";
+                                          } else if (convertedTime > 3600 &&
+                                              convertedTime < 86400) {
+                                            finalTime =
+                                                "${time.inHours} hours ago";
+                                          } else if (convertedTime <= 24 &&
+                                              convertedTime > 48) {
+                                            finalTime = "yesterday";
+                                          } else {
+                                            finalTime =
+                                                "${time.inDays} days ago";
+                                          }
+
+                                          return RecentMessageContainer(
+                                              buddyUser: user,
+                                              mainUser: currentUser,
+                                              lastMessage: ds["lastMessage"],
+                                              lastMessageTime: finalTime,
+                                              chatRoomId: ds.id,
+                                              myUsername:
+                                                  currentUser!.lastName);
+                                        }
+                                        return const EmptyRecentMessageContainer();
+                                      });
+                                });
+                          } else if (snapshot.data?.docs.length == 0) {
+                            return const EmptyRecentMessageContainer();
+                          } else {
+                            return const LoadingRecentMessageContainer();
+                          }
+                        },
+                      ),
                       verticalSpacer(30),
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      //   child: Container(
-                      //     child: Column(
-                      //       children: [
-                      //         SubTitleText(
-                      //           title: "Recent Messages",
-                      //           size: 20,
-                      //         ),
-                      //         verticalSpacer(10),
-                      //         Padding(
-                      //           padding: const EdgeInsets.only(left: 20.0),
-                      //           child: Row(
-                      //             crossAxisAlignment: CrossAxisAlignment.start,
-                      //             children: [
-                      //               CircleAvatar(
-                      //                 radius: 30,
-                      //                 backgroundImage: NetworkImage(Conversation
-                      //                     .conversations[0].imageUrl),
-                      //               ),
-                      //               Padding(
-                      //                 padding: const EdgeInsets.symmetric(
-                      //                     horizontal: 15.0),
-                      //                 child: Container(
-                      //                   child: Column(
-                      //                     crossAxisAlignment:
-                      //                         CrossAxisAlignment.start,
-                      //                     children: [
-                      //                       SubTitleText(
-                      //                         title: Conversation
-                      //                             .conversations[0].name,
-                      //                         size: 21,
-                      //                       ),
-                      //                       verticalSpacer(6),
-                      //                       Text(
-                      //                         Conversation
-                      //                             .conversations[0].content,
-                      //                         overflow: TextOverflow.ellipsis,
-                      //                         maxLines: 2,
-                      //                         softWrap: false,
-                      //                       ),
-                      //                       verticalSpacer(30),
-                      //                     ],
-                      //                   ),
-                      //                 ),
-                      //               )
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -675,5 +730,138 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ));
+  }
+}
+
+class RecentMessageContainer extends StatelessWidget {
+  const RecentMessageContainer({
+    required this.lastMessageTime,
+    required this.buddyUser,
+    required this.mainUser,
+    required this.chatRoomId,
+    required this.lastMessage,
+    required this.myUsername,
+    Key? key,
+  }) : super(key: key);
+  final String lastMessage, chatRoomId, myUsername;
+  final AppUser? buddyUser, mainUser;
+  final String lastMessageTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Container(
+        child: Column(
+          children: [
+            SubTitleText(
+              title: "Recent Message",
+              size: 20,
+            ),
+            verticalSpacer(20),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(buddyUser!.imageUrl),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SubTitleText(
+                            title:
+                                '${buddyUser!.lastName} ${buddyUser!.firstName}',
+                            size: 21,
+                          ),
+                          verticalSpacer(6),
+                          Text(
+                            lastMessage,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            softWrap: false,
+                          ),
+                          verticalSpacer(30),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class EmptyRecentMessageContainer extends StatelessWidget {
+  const EmptyRecentMessageContainer({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Container(
+        child: Column(
+          children: [
+            SubTitleText(
+              title: "Recent Message",
+              size: 20,
+            ),
+            verticalSpacer(20),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Row(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CustomSubTitleText(
+                    title: 'No Available Chats',
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w900,
+                  ),
+                  horizontalSpacer(15),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LoadingRecentMessageContainer extends StatelessWidget {
+  const LoadingRecentMessageContainer({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Container(
+        child: Column(
+          children: [
+            SubTitleText(
+              title: "Recent Message",
+              size: 20,
+            ),
+            verticalSpacer(20),
+            Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: loader(size: 5)),
+          ],
+        ),
+      ),
+    );
   }
 }

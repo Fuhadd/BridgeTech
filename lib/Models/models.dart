@@ -7,6 +7,7 @@ class AppUser {
   final String phone;
   final String email;
   final String? bio;
+  final String? token;
   final String? looking;
   final String? technical;
   final List<dynamic>? skills;
@@ -25,6 +26,7 @@ class AppUser {
     this.looking,
     this.skills,
     this.technical,
+    this.token,
     this.matchedUsers,
   });
 
@@ -38,6 +40,7 @@ class AppUser {
       looking: json['looking'],
       technical: json['technical'],
       skills: json['skills'],
+      token: json['token'],
       matchedUsers: json['matchedUsers'],
       imageUrl: json['imageUrl']);
 
@@ -51,6 +54,7 @@ class AppUser {
         "lastName": lastName,
         "phoneNumber": phone,
         "email": email,
+        "token": token,
         "imageUrl": imageUrl,
         "matchedUsers": matchedUsers,
       };

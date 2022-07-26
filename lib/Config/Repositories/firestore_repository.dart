@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:urban_hive_test/Models/models.dart';
 
@@ -82,6 +83,20 @@ class FirestoreRepository {
         // 'accountCreated': accountCreated,
       },
     );
+    return;
+  }
+
+  Future<void> storeNotificationToken() async {
+    String? uid = firebaseAuth.currentUser?.uid.toString();
+    String? token = await FirebaseMessaging.instance.getToken();
+
+    await firebaseFirestore.doc(uid.toString()).set(
+        {
+          'token': token,
+        },
+        SetOptions(
+          merge: true,
+        ));
     return;
   }
 
@@ -442,5 +457,23 @@ class FirestoreRepository {
       "sentAt": time,
     };
     await sendInvite(matchId, matchesData);
+  }
+
+  Future<String> getUserTokenbyid(String uid) async {
+    try {
+      final appUser = firebaseFirestore.doc(uid);
+      var snapshot = await appUser.get();
+
+      if (snapshot.exists) {
+        dynamic data = snapshot.data();
+        String value = data?['token'];
+        return value;
+        //as Map<String, dynamic>);
+
+        // app_user.User.fromJson(snapshot.data());
+      }
+      //print(snapshot);
+    } catch (error) {}
+    return '';
   }
 }
