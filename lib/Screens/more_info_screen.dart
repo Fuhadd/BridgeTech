@@ -6,9 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 // import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:restart_app/restart_app.dart';
 import 'package:urban_hive_test/Config/Repositories/constant_repository.dart';
 import 'package:urban_hive_test/Config/Repositories/firebase_storage_repository.dart';
 import 'package:urban_hive_test/Config/Repositories/firestore_repository.dart';
@@ -16,10 +13,8 @@ import 'package:urban_hive_test/Helpers/colors.dart';
 import 'package:urban_hive_test/Screens/home_page.dart';
 import 'package:urban_hive_test/Widgets/constant_widget.dart';
 
-import '../Config/Blocs/signup_bloc/signup_bloc.dart';
 import '../Config/Blocs/userinfo_bloc/userinfo_bloc.dart';
 import '../Helpers/constants.dart';
-import 'login_screen.dart';
 // import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class MoreInfoScreen extends StatelessWidget {
@@ -99,7 +94,7 @@ class MoreInfoScreen extends StatelessWidget {
                               var looking = _formKey
                                   .currentState?.fields['looking']?.value;
 
-                              _showBottomSheet(context,
+                              showBottomSheetSkills(context,
                                   formKey: _formKey,
                                   repository: constantRepository,
                                   userinfoBloc: userinfoBloc,
@@ -266,7 +261,7 @@ Container _UserInfoCard(String title,
           children: [
             Row(
               children: [
-                Icon(
+                const Icon(
                   FontAwesomeIcons.toolbox,
                   color: Colors.grey,
                   size: 19,
@@ -280,7 +275,7 @@ Container _UserInfoCard(String title,
                 horizontalSpacer(10),
               ],
             ),
-            Icon(
+            const Icon(
               FontAwesomeIcons.angleRight,
               color: Colors.grey,
             )
@@ -291,7 +286,7 @@ Container _UserInfoCard(String title,
   );
 }
 
-Future<dynamic> _showBottomSheet(
+Future<dynamic> showBottomSheetSkills(
   BuildContext context, {
   required String bio,
   required String technical,
@@ -302,7 +297,7 @@ Future<dynamic> _showBottomSheet(
   var phoneNumber,
 }) {
   List<String>? skills = [];
-  final _formKey1 = GlobalKey<FormBuilderState>();
+  final formKey1 = GlobalKey<FormBuilderState>();
   return showModalBottomSheet(
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -318,7 +313,7 @@ Future<dynamic> _showBottomSheet(
             mainAxisSize: MainAxisSize.min,
             children: [
               FormBuilder(
-                key: _formKey1,
+                key: formKey1,
                 child: Column(
                   children: [
                     customFormBuilderTextField(
@@ -358,18 +353,18 @@ Future<dynamic> _showBottomSheet(
                     verticalSpacer(30),
                     CustomButton(
                       onTap: () {
-                        var validate = _formKey1.currentState?.validate();
+                        var validate = formKey1.currentState?.validate();
                         if (validate == true) {
-                          _formKey1.currentState?.save();
+                          formKey1.currentState?.save();
                           var skill1 =
-                              _formKey1.currentState?.fields['skill1']?.value;
+                              formKey1.currentState?.fields['skill1']?.value;
                           print(skill1);
                           var skill2 =
-                              _formKey1.currentState?.fields['skill2']?.value;
+                              formKey1.currentState?.fields['skill2']?.value;
                           var skill3 =
-                              _formKey1.currentState?.fields['skill3']?.value;
+                              formKey1.currentState?.fields['skill3']?.value;
                           var skill4 =
-                              _formKey1.currentState?.fields['skill4']?.value;
+                              formKey1.currentState?.fields['skill4']?.value;
                           skills = repository?.convertStringToList(
                               skill1, skill2, skill3, skill4);
 

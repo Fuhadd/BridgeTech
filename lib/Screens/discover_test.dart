@@ -30,14 +30,14 @@ class _DiscoverTestScreenState extends State<DiscoverTestScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   Widget ChatMessagePage() {
-    PageController _pageController =
+    PageController pageController =
         PageController(initialPage: widget.initialPage);
     return StreamBuilder(
       stream: chats,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           print("waiting");
-          return loader();
+          return blackLoader();
         }
         // if (snapshot.hasData == null) {
         //   return NoUserWidget(
@@ -50,7 +50,7 @@ class _DiscoverTestScreenState extends State<DiscoverTestScreen> {
         if (snapshot.hasData && snapshot.data!.docs.length > 0) {
           return PageView.builder(
             physics: const NeverScrollableScrollPhysics(),
-            controller: _pageController,
+            controller: pageController,
             dragStartBehavior: DragStartBehavior.down,
             itemCount: snapshot.data?.docs.length ?? 6,
             itemBuilder: (BuildContext context, int index) {
@@ -68,12 +68,13 @@ class _DiscoverTestScreenState extends State<DiscoverTestScreen> {
                 technical: ds.get("technical"),
                 matchedUsers: ds.get("matchedUsers"),
               );
+              print(snapshot.data?.docs.length);
               //pri
               //   print(user?[index]!.technical);
               return DiscoverScreenWidget(
                 pageCount: snapshot.data?.docs.length,
                 pageNumber: index,
-                pageController: _pageController,
+                pageController: pageController,
                 imageUrl: widget.currentUser.imageUrl,
                 buddyUser: buddyUser,
                 mainUser: widget.currentUser,
@@ -88,7 +89,7 @@ class _DiscoverTestScreenState extends State<DiscoverTestScreen> {
           );
         }
 
-        return loader();
+        return blackLoader();
       },
     );
   }
@@ -125,8 +126,10 @@ class _DiscoverTestScreenState extends State<DiscoverTestScreen> {
             pageIndex: 5,
             // user: widget.currentUser,
           ),
-          appBar:
-              MessageAppar(context, 'Candidates', widget.currentUser.imageUrl),
+          appBar: CustomCandidateAppBar(
+            context,
+          ),
+          // MessageAppar(context, 'Candidates', widget.currentUser.imageUrl),
           body: ChatMessagePage()
           // Column(
           //   children: [

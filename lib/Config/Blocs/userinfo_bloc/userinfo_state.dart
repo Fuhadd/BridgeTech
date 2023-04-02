@@ -12,7 +12,7 @@ class UserInfoInitial extends UserInfoState {}
 class UserInfoInProgress extends UserInfoState {}
 
 class UserInfoSuccessful extends UserInfoState {
-  UserInfoSuccessful();
+  const UserInfoSuccessful();
 }
 
 class UserInfoFailed extends UserInfoState {

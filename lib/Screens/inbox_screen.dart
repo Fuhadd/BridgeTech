@@ -85,6 +85,7 @@ class _InboxscreenState extends State<Inboxscreen> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   DocumentSnapshot ds = snapshot.data!.docs[index];
+                  print(ds.data());
                   int? count = snapshot.data?.docs.length;
                   return count == 0
                       ? const NoContentWidget(mainText: 'Chat Screen')
@@ -140,11 +141,17 @@ class _InboxscreenState extends State<Inboxscreen> {
                               // final time = DateFormat.format(
                               //  ,
                               // );
+                              print('object');
+                              print(ds["lastMessage"]);
+                              print(ds["unreadBy"] ?? '');
+                              print(ds["unreadCount"] ?? 0);
 
                               return InboxPage(
                                   buddyUser: user,
                                   mainUser: widget.currentUser,
                                   lastMessage: ds["lastMessage"],
+                                  unreadBy: ds["unreadBy"] ?? '',
+                                  unreadCount: ds["unreadCount"] ?? 0,
                                   lastMessageTime: finalTime,
                                   chatRoomId: ds.id,
                                   myUsername: widget.currentUser.lastName);
@@ -157,6 +164,7 @@ class _InboxscreenState extends State<Inboxscreen> {
             : buildChatShimmer();
       },
     );
+ 
   }
 
   getChatRooms() async {
@@ -208,12 +216,15 @@ class InboxPage extends StatelessWidget {
     required this.chatRoomId,
     required this.lastMessage,
     required this.myUsername,
+    required this.unreadBy,
+    required this.unreadCount,
     Key? key,
   }) : super(key: key);
   // AsyncSnapshot<List<QueryDocumentSnapshot<Object?>>> firstSnapshot;
-  final String lastMessage, chatRoomId, myUsername;
+  final String lastMessage, chatRoomId, myUsername, unreadBy;
   final AppUser? buddyUser, mainUser;
   final String lastMessageTime;
+  final int unreadCount;
 
   @override
   Widget build(BuildContext context) {
@@ -223,6 +234,10 @@ class InboxPage extends StatelessWidget {
             .createChatRoomId(mainUser!.id!, buddyUser!.id!);
 
         await FirestoreRepository().openChatroom(mainUser!.id!, buddyUser!.id!);
+
+        //  .createChatRoomId(mainUser!.id!, buddyUser!.id!);
+
+        // ignore: use_build_context_synchronously
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -249,15 +264,45 @@ class InboxPage extends StatelessWidget {
                   color: Colors.black.withOpacity(0.8),
                   size: 19,
                 ),
-                subtitle: Text(
-                  lastMessage,
-                  softWrap: true,
-                  style: const TextStyle(fontSize: 15),
+
+                subtitle: Column(
+                  children: [
+                    verticalSpacer(5),
+                    Text(
+                      lastMessage,
+                      softWrap: true,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 15),
+                    ),
+                  ],
                 ),
                 //Text(Conversation.conversations[index].name),
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(buddyUser!.imageUrl),
-                ),
+                leading: unreadBy == buddyUser!.id && unreadCount != 0
+                    ? Container(
+                        child: Stack(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(buddyUser!.imageUrl),
+                            ),
+                            Container(
+                              height: 20,
+                              width: 20,
+                              decoration: BoxDecoration(
+                                color: Yellow,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Text(unreadCount.toString()),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : CircleAvatar(
+                        backgroundImage: NetworkImage(buddyUser!.imageUrl),
+                      ),
                 // subtitle: Text("Conversation.conversations[index].content"),
                 trailing: Text(lastMessageTime.toString(),
                     style: const TextStyle(fontSize: 12)),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:urban_hive_test/Models/models.dart';
+import 'package:urban_hive_test/Screens/update_incomplete_user_profile_screen.dart';
 import 'package:urban_hive_test/Widgets/constant_widget.dart';
 
 import '../Config/Repositories/user_repository.dart';
@@ -70,6 +71,17 @@ Widget _buildUserPage(BuildContext context, AppUser user) {
         Stack(
           children: [
             Container(
+              height: 250,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  Colors.purple,
+                  Yellow,
+                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                borderRadius: const BorderRadius.only(
+                    bottomRight: Radius.circular(20.0),
+                    bottomLeft: Radius.circular(20.0)),
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -85,17 +97,6 @@ Widget _buildUserPage(BuildContext context, AppUser user) {
                     style: Theme.of(context).textTheme.headline2,
                   ),
                 ],
-              ),
-              height: 250,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  Colors.purple,
-                  Yellow,
-                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-                borderRadius: const BorderRadius.only(
-                    bottomRight: Radius.circular(20.0),
-                    bottomLeft: Radius.circular(20.0)),
               ),
             ),
             // Positioned(
@@ -130,7 +131,15 @@ Widget _buildUserPage(BuildContext context, AppUser user) {
           child: Align(
             alignment: Alignment.topRight,
             child: TextButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => IncompleteUpdateUserProfileTestScreen(
+                      currentUser: user,
+                    ),
+                  ),
+                );
+              },
               icon: const Icon(Icons.edit, color: Colors.pink),
               label: const Text(
                 'Complete Profile',
@@ -229,6 +238,13 @@ Widget UserFields(BuildContext context,
     child: Column(
       children: [
         Container(
+          width: double.infinity - 50,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1.0, color: Colors.grey),
+            ),
+            color: Colors.white,
+          ),
           child: Column(
             children: [
               (Row(
@@ -255,13 +271,6 @@ Widget UserFields(BuildContext context,
                   )),
               verticalSpacer(15)
             ],
-          ),
-          width: double.infinity - 50,
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.grey),
-            ),
-            color: Colors.white,
           ),
         ),
       ],

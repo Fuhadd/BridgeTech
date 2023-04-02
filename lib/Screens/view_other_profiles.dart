@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:urban_hive_test/Config/Repositories/firestore_repository.dart';
 
 import '../Helpers/colors.dart';
 import '../Helpers/constants.dart';
@@ -8,8 +9,10 @@ import '../Models/models.dart';
 import '../Widgets/constant_widget.dart';
 
 class ViewOtherProfiles extends StatelessWidget {
-  ViewOtherProfiles({required this.buddyUser, Key? key}) : super(key: key);
+  ViewOtherProfiles({required this.buddyUser, required this.mainUser, Key? key})
+      : super(key: key);
   AppUser buddyUser;
+  AppUser mainUser;
 
   @override
   Widget build(BuildContext context) {
@@ -170,12 +173,24 @@ class ViewOtherProfiles extends StatelessWidget {
                     color: const Color(0xFF2B2E4A),
                   ),
                   verticalSpacer(15),
-                  CustomBioText(
-                    align: true,
-                    title: buddyUser.bio!,
-                    color: Colors.grey,
+                  SingleChildScrollView(
+                    child: SizedBox(
+                      height: 100,
+                      child: CustomBioText(
+                        align: true,
+                        title: buddyUser.bio!,
+                        color: Colors.grey,
+                      ),
+                    ),
                   ),
-                  verticalSpacer(30),
+                  verticalSpacer(40),
+                  SmallCustomAcceptButton1(
+                      onTap: (() async {
+                        FirestoreRepository().unMatch(
+                            currentUserId: mainUser.id!,
+                            invitedUserId: buddyUser.id!);
+                      }),
+                      title: 'Unmatch')
                 ],
               ),
             ),
