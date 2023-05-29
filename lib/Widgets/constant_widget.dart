@@ -347,9 +347,37 @@ Future<dynamic> showdialog(BuildContext context) {
       });
 }
 
-Widget loader({double size = 50}) {
+Widget loader({
+  double size = 50,
+}) {
   return SpinKitWave(
     color: Yellow,
+  );
+}
+
+Widget loaderWhite({
+  double size = 50,
+}) {
+  return SpinKitWave(
+    color: Colors.white,
+    size: size,
+  );
+}
+
+Widget loaderBlack({
+  double size = 50,
+}) {
+  return SpinKitWave(
+    color: Colors.black,
+    size: size,
+  );
+}
+
+Widget blackLoader({
+  double size = 50,
+}) {
+  return const SpinKitWave(
+    color: Colors.black,
   );
 }
 
@@ -408,7 +436,7 @@ class CustomBioText extends StatelessWidget {
     return Container(
       child: align
           ? Align(
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.topLeft,
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(

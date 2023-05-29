@@ -596,8 +596,10 @@ class _HomePageState extends State<HomePage> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ViewOtherProfiles(buddyUser: user),
+                              builder: (context) => ViewOtherProfiles(
+                                buddyUser: user,
+                                mainUser: currentUser,
+                              ),
                             ),
                           );
                         },
@@ -708,8 +710,10 @@ class _HomePageState extends State<HomePage> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ViewOtherProfiles(buddyUser: user),
+                              builder: (context) => ViewOtherProfiles(
+                                buddyUser: user,
+                                mainUser: currentUser,
+                              ),
                             ),
                           );
                         },
@@ -781,11 +785,14 @@ class RecentMessageContainer extends StatelessWidget {
                             size: 21,
                           ),
                           verticalSpacer(6),
-                          Text(
-                            lastMessage,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            softWrap: false,
+                          SizedBox(
+                            width: 200,
+                            child: Text(
+                              lastMessage,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              softWrap: false,
+                            ),
                           ),
                           verticalSpacer(30),
                         ],

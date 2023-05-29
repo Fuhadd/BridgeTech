@@ -32,6 +32,17 @@ PreferredSizeWidget CustomAppar(
   );
 }
 
+PreferredSizeWidget CustomCandidateAppBar(
+  BuildContext context,
+) {
+  return AppBar(
+    iconTheme: const IconThemeData(color: Colors.black, size: 35),
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+    centerTitle: true,
+  );
+}
+
 PreferredSizeWidget MessageAppar(
   BuildContext context,
   String appBarTitle,

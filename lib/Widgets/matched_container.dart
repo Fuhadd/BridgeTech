@@ -43,10 +43,19 @@ class MatchContainer extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(
-                  buddyUser!.imageUrl,
+              Container(
+                padding: const EdgeInsets.all(5),
+                width: 70,
+                height: 70,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xfff4a50c),
+                ),
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: NetworkImage(
+                    buddyUser!.imageUrl,
+                  ),
                 ),
               ),
               horizontalSpacer(18),
@@ -90,7 +99,7 @@ class MatchContainer extends StatelessWidget {
                           ),
                     Text(
                       "Technical",
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 17, fontWeight: FontWeight.normal),
                     )
                   ],
@@ -103,7 +112,7 @@ class MatchContainer extends StatelessWidget {
                     ),
                     Text(
                       "Nigeria",
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 17, fontWeight: FontWeight.normal),
                     )
                   ],
@@ -112,14 +121,17 @@ class MatchContainer extends StatelessWidget {
             ),
           ),
           verticalSpacer(25),
-          Text(
-            buddyUser!.bio.toString(),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context)
-                .textTheme
-                .headline6!
-                .copyWith(fontSize: 17, fontWeight: FontWeight.normal),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              buddyUser!.bio.toString(),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(fontSize: 17, fontWeight: FontWeight.normal),
+            ),
           ),
           verticalSpacer(35),
           Padding(
@@ -131,8 +143,10 @@ class MatchContainer extends StatelessWidget {
                     onTap: (() async {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) =>
-                              ViewOtherProfiles(buddyUser: buddyUser!),
+                          builder: (context) => ViewOtherProfiles(
+                            buddyUser: buddyUser!,
+                            mainUser: mainUser!,
+                          ),
                         ),
                       );
                     }),
@@ -202,10 +216,19 @@ class MatchRequestContainer extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(
-                  buddyUser!.imageUrl,
+              Container(
+                padding: const EdgeInsets.all(5),
+                width: 70,
+                height: 70,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xfff4a50c),
+                ),
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: NetworkImage(
+                    buddyUser!.imageUrl,
+                  ),
                 ),
               ),
               horizontalSpacer(18),
@@ -249,7 +272,7 @@ class MatchRequestContainer extends StatelessWidget {
                           ),
                     Text(
                       "Technical",
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 17, fontWeight: FontWeight.normal),
                     )
                   ],
@@ -263,7 +286,7 @@ class MatchRequestContainer extends StatelessWidget {
                     ),
                     Text(
                       "Nigeria",
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 17, fontWeight: FontWeight.normal),
                     )
                   ],
@@ -278,7 +301,7 @@ class MatchRequestContainer extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context)
                 .textTheme
-                .headline6!
+                .titleLarge!
                 .copyWith(fontSize: 17, fontWeight: FontWeight.normal),
           ),
           verticalSpacer(35),
@@ -394,7 +417,7 @@ class MatchFailedContainer extends StatelessWidget {
                           ),
                     Text(
                       "Technical",
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 17, fontWeight: FontWeight.normal),
                     )
                   ],
@@ -407,7 +430,7 @@ class MatchFailedContainer extends StatelessWidget {
                     ),
                     Text(
                       "Nigeria",
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 17, fontWeight: FontWeight.normal),
                     )
                   ],
@@ -422,7 +445,7 @@ class MatchFailedContainer extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context)
                 .textTheme
-                .headline6!
+                .titleLarge!
                 .copyWith(fontSize: 17, fontWeight: FontWeight.normal),
           ),
           verticalSpacer(35),
@@ -435,8 +458,10 @@ class MatchFailedContainer extends StatelessWidget {
                     onTap: (() async {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) =>
-                              ViewOtherProfiles(buddyUser: buddyUser!),
+                          builder: (context) => ViewOtherProfiles(
+                            buddyUser: buddyUser!,
+                            mainUser: mainUser!,
+                          ),
                         ),
                       );
                     }),
@@ -540,7 +565,7 @@ class TestContainer extends StatelessWidget {
                           ),
                     Text(
                       "Technical",
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 17, fontWeight: FontWeight.normal),
                     )
                   ],
@@ -553,7 +578,7 @@ class TestContainer extends StatelessWidget {
                     ),
                     Text(
                       "Nigeria",
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 17, fontWeight: FontWeight.normal),
                     )
                   ],
@@ -568,7 +593,7 @@ class TestContainer extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context)
                 .textTheme
-                .headline6!
+                .titleLarge!
                 .copyWith(fontSize: 17, fontWeight: FontWeight.normal),
           ),
           verticalSpacer(35),
@@ -676,7 +701,7 @@ class SentRequestContainer extends StatelessWidget {
                           ),
                     Text(
                       "Technical",
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 17, fontWeight: FontWeight.normal),
                     )
                   ],
@@ -689,7 +714,7 @@ class SentRequestContainer extends StatelessWidget {
                     ),
                     Text(
                       "Nigeria",
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 17, fontWeight: FontWeight.normal),
                     )
                   ],
@@ -704,7 +729,7 @@ class SentRequestContainer extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context)
                 .textTheme
-                .headline6!
+                .titleLarge!
                 .copyWith(fontSize: 17, fontWeight: FontWeight.normal),
           ),
           verticalSpacer(35),

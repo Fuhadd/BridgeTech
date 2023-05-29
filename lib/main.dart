@@ -140,7 +140,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: theme(),
-          // home: DiscoverTest(),
+          // home: const CandidateScreen12(),
           home: StreamBuilder<User?>(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context, snapshot) {
@@ -160,9 +160,9 @@ class MyApp extends StatelessWidget {
                   return LoginScreen();
                 }
               }),
-          // HomePage(),
+          // // HomePage(),
           routes: {
-            SignUpScreen.routeName: (context) => SignUpScreen(),
+            SignUpScreen.routeName: (context) => const SignUpScreen(),
             LoginScreen.routeName: (context) => LoginScreen(),
             HomePage.routeName: (context) => const HomePage(),
             ForgotPassword.routeName: (context) => ForgotPassword(),

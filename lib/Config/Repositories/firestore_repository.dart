@@ -47,6 +47,7 @@ class FirestoreRepository {
     required String phoneNumber,
     required String bio,
     required List skills,
+    required List skills,
     required String technical,
     required String looking,
   }) async {
@@ -152,6 +153,8 @@ class FirestoreRepository {
   Future<AppUser?> saveUsersCredentialslocal() async {
     try {
       AppUser? user = await getUsersCredentials();
+
+      print(user);
 
       print(user);
 
@@ -413,6 +416,23 @@ class FirestoreRepository {
     await sendInvite(matchId, matchesData);
   }
 
+  Future<void> unMatch({
+    required String currentUserId,
+    required String invitedUserId,
+  }) async {
+    List<String> users = [currentUserId, invitedUserId];
+
+    String matchId = await createChatRoomId(currentUserId, invitedUserId);
+
+    await chatFirebaseFirestore.doc(matchId).delete().catchError((e) {
+      print(e.toString());
+    });
+
+    await matchFirebaseFirestore.doc(matchId).delete().catchError((e) {
+      print(e.toString());
+    });
+  }
+
   Future<String> getUserTokenbyid(String uid) async {
     try {
       final appUser = firebaseFirestore.doc(uid);
@@ -425,43 +445,5 @@ class FirestoreRepository {
       }
     } catch (error) {}
     return '';
-  }
-
-  Future<UnreadModel?> getUserunreadbyid({
-    required String currentUserId,
-    required String invitedUserId,
-  }) async {
-    try {
-      String matchId = await createChatRoomId(currentUserId, invitedUserId);
-      final appUser = chatFirebaseFirestore.doc(matchId);
-      var snapshot = await appUser.get();
-
-      if (snapshot.exists) {
-        dynamic data = snapshot.data();
-        int unreadCount = data?['unreadCount'];
-        String unreadBy = data?['unreadBy'];
-        UnreadModel result =
-            UnreadModel(unreadBy: unreadBy, unreadCount: unreadCount);
-        return result;
-      }
-    } catch (error) {}
-    return null;
-  }
-
-  Future<void>? updateUnreadCount(
-      {required String chatRoomId,
-      required String unreadBy,
-      required int unreadCount}) async {
-    chatFirebaseFirestore.doc(chatRoomId).set(
-        {
-          "unreadCount": unreadCount,
-          "unreadBy": unreadBy,
-        },
-        SetOptions(
-          merge: true,
-        )).catchError((e) {
-      print(e.toString());
-    });
-    return;
   }
 }

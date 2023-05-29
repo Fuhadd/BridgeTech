@@ -4,40 +4,40 @@ import 'package:urban_hive_test/Helpers/colors.dart';
 ThemeData theme() {
   return ThemeData(
       fontFamily: 'Lato',
-      backgroundColor: background,
       secondaryHeaderColor: Colors.deepPurple,
       textTheme: const TextTheme(
-        headline1: TextStyle(
+        displayLarge: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 36,
         ),
-        headline2: TextStyle(
+        displayMedium: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 30,
         ),
-        headline3: TextStyle(
+        displaySmall: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 24,
         ),
-        headline4: TextStyle(
+        headlineMedium: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 19,
         ),
-        headline5: TextStyle(
+        headlineSmall: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 18,
         ),
-        headline6: TextStyle(
+        titleLarge: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 14,
         ),
       ),
       colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.yellow)
-          .copyWith(secondary: Color(0xfff4a50C)));
+          .copyWith(secondary: Color(0xfff4a50C))
+          .copyWith(background: background));
 }

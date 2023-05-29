@@ -85,6 +85,7 @@ class _InboxscreenState extends State<Inboxscreen> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   DocumentSnapshot ds = snapshot.data!.docs[index];
+                  print(ds.data());
                   int? count = snapshot.data?.docs.length;
                   return count == 0
                       ? const NoContentWidget(mainText: 'Chat Screen')
@@ -140,6 +141,10 @@ class _InboxscreenState extends State<Inboxscreen> {
                               // final time = DateFormat.format(
                               //  ,
                               // );
+                              print('object');
+                              print(ds["lastMessage"]);
+                              print(ds["unreadBy"] ?? '');
+                              print(ds["unreadCount"] ?? 0);
 
                               return InboxPage(
                                   buddyUser: user,
@@ -159,6 +164,7 @@ class _InboxscreenState extends State<Inboxscreen> {
             : buildChatShimmer();
       },
     );
+ 
   }
 
   getChatRooms() async {
@@ -258,10 +264,18 @@ class InboxPage extends StatelessWidget {
                   color: Colors.black.withOpacity(0.8),
                   size: 19,
                 ),
-                subtitle: Text(
-                  lastMessage,
-                  softWrap: true,
-                  style: const TextStyle(fontSize: 15),
+
+                subtitle: Column(
+                  children: [
+                    verticalSpacer(5),
+                    Text(
+                      lastMessage,
+                      softWrap: true,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 15),
+                    ),
+                  ],
                 ),
                 //Text(Conversation.conversations[index].name),
                 leading: unreadBy == buddyUser!.id && unreadCount != 0

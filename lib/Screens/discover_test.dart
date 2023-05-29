@@ -37,7 +37,7 @@ class _DiscoverTestScreenState extends State<DiscoverTestScreen> {
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           print("waiting");
-          return loader();
+          return blackLoader();
         }
         // if (snapshot.hasData == null) {
         //   return NoUserWidget(
@@ -89,7 +89,7 @@ class _DiscoverTestScreenState extends State<DiscoverTestScreen> {
           );
         }
 
-        return loader();
+        return blackLoader();
       },
     );
   }
@@ -126,8 +126,10 @@ class _DiscoverTestScreenState extends State<DiscoverTestScreen> {
             pageIndex: 5,
             // user: widget.currentUser,
           ),
-          appBar:
-              MessageAppar(context, 'Candidates', widget.currentUser.imageUrl),
+          appBar: CustomCandidateAppBar(
+            context,
+          ),
+          // MessageAppar(context, 'Candidates', widget.currentUser.imageUrl),
           body: ChatMessagePage()
           // Column(
           //   children: [
