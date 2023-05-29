@@ -1,139 +1,170 @@
-// import 'dart:ui';
+import 'package:flutter/material.dart';
 
-// import 'package:flutter/gestures.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:urban_hive_test/Helpers/constants.dart';
+import 'package:urban_hive_test/Screens/candidate_screen%20copy.dart';
+
+import 'package:urban_hive_test/Widgets/constant_widget.dart';
+
+import '../Models/models.dart';
+
+class DiscoverScreenWidget1 extends StatefulWidget {
+  const DiscoverScreenWidget1(
+      {Key? key,
+      required this.imageUrl,
+      required this.pageCount,
+      required this.pageNumber,
+      required this.pageController,
+      required this.buddyUser,
+      required this.mainUser})
+      : super(key: key);
+
+  final String imageUrl;
+  final AppUser? buddyUser, mainUser;
+  final int pageNumber;
+  final int? pageCount;
+  final PageController pageController;
+
+  @override
+  State<DiscoverScreenWidget1> createState() => _DiscoverScreenWidget1State();
+}
+
+class _DiscoverScreenWidget1State extends State<DiscoverScreenWidget1> {
+  @override
+  Widget build(BuildContext context) {
+    return CandidateScreen(
+      imageUrl: widget.imageUrl,
+      pageCount: widget.pageCount,
+      pageNumber: widget.pageNumber,
+      pageController: widget.pageController,
+      buddyUser: widget.buddyUser,
+      mainUser: widget.mainUser,
+    );
+  }
+}
+
+Container _UserInfoCard(String title) {
+  return Container(
+    height: 70,
+    width: double.infinity,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      color: Colors.white,
+    ),
+    child: Card(
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                const Icon(
+                  FontAwesomeIcons.user,
+                  color: Colors.grey,
+                  size: 19,
+                ),
+                horizontalSpacer(10),
+                CustomSubTitleText(
+                  title: 'Personal Information',
+                  color: Colors.grey,
+                  size: 19,
+                ),
+                horizontalSpacer(10),
+              ],
+            ),
+            const Icon(
+              FontAwesomeIcons.angleRight,
+              color: Colors.grey,
+            )
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+class DiscoveredColumn extends StatelessWidget {
+  const DiscoveredColumn({Key? key, required this.child, required this.title})
+      : super(key: key);
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        CustomSubTitleText(
+          title: title,
+          color: Colors.grey,
+          size: 20,
+        ),
+        verticalSpacer(9),
+        child,
+      ],
+    );
+  }
+}
+
+Future<dynamic> _showBottomSheet(BuildContext context, {AppUser? buddyUser}) {
+  return showModalBottomSheet(
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CustomSubTitleText(
+                title: 'About ${buddyUser?.lastName}',
+                color: const Color(0xFF2B2E4A),
+              ),
+              CustomSubTitleText(
+                align: true,
+                title: buddyUser!.bio!,
+                color: Colors.grey,
+                size: 16,
+              )
+            ],
+          ),
+        );
+      });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 // import 'package:flutter/material.dart';
-// import 'package:flutter_form_builder/flutter_form_builder.dart';
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:urban_hive_test/Config/Repositories/firestore_repository.dart';
-// import 'package:urban_hive_test/Helpers/constants.dart';
-// import 'package:urban_hive_test/Helpers/sharedPrefs.dart';
-// import 'package:urban_hive_test/Screens/chat_screen.dart';
-// import 'package:urban_hive_test/Widgets/constant_widget.dart';
-// import 'package:urban_hive_test/Widgets/custom_curved_appbar.dart';
+// import 'package:urban_hive_test/Models/models.dart';
 
+// import '../Config/Repositories/firestore_repository.dart';
 // import '../Helpers/colors.dart';
-// import '../Models/models.dart';
-// import '../Widgets/navigation_drawer.dart';
-// import '../Widgets/shimmer_widget.dart';
-
-// // class DiscoverScreen extends StatefulWidget {
-// //   const DiscoverScreen({Key? key,required this.currentUser}) : super(key: key);
-// //   final AppUser currentUser;
-
-// //   @override
-// //   State<DiscoverScreen> createState() => _DiscoverScreenState();
-// // }
-
-// class DiscoverScreen extends StatefulWidget {
-//   DiscoverScreen({Key? key, required this.currentUser}) : super(key: key);
-//   static const routeName = '/usermatches';
-//   final AppUser currentUser;
-//   int? pageIndex = 0;
-
-//   @override
-//   State<DiscoverScreen> createState() => _DiscoverScreenState();
-// }
-
-// class _DiscoverScreenState extends State<DiscoverScreen> {
-//   int? pageNumber = 0;
-//   PageController _pageController = PageController(initialPage: 0);
-
-//   getMyInfoFromSharedPreference() async {
-//     pageNumber = await SharedPreferenceHelper().getPageIndex();
-//     final _pageController = PageController(initialPage: pageNumber ?? 0);
-
-//     setState(() {});
-//   }
-
-//   onScreenLoaded() async {
-//     await getMyInfoFromSharedPreference();
-//   }
-
-//   @override
-//   void initState() {
-//     onScreenLoaded();
-//     // TODO: implement initState
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     double screenWidth = MediaQuery.of(context).size.width;
-//     double screenHeight = MediaQuery.of(context).size.height;
-
-//     String imageUrl =
-//         'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDIwfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60';
-//     FirestoreRepository firestoreRepository = FirestoreRepository();
-//     return SafeArea(
-//       child: Scaffold(
-//           drawer: NavigationDrawer(
-//             pageIndex: 5,
-//             // user: widget.currentUser,
-//           ),
-//           appBar:
-//               MessageAppar(context, 'Discover', widget.currentUser.imageUrl),
-//           body: FutureBuilder<List<AppUser?>>(
-//             future: firestoreRepository.getAllUsers(widget.currentUser.id!),
-//             builder: (BuildContext context, snapshot) {
-//               if (snapshot.hasError) {
-//                 return Text("Something went wrong");
-//               }
-
-//               if (snapshot.data == null) {
-//                 return loader();
-//               }
-
-//               if (snapshot.connectionState == ConnectionState.done &&
-//                   snapshot.hasData &&
-//                   snapshot.data != null) {
-//                 final user = snapshot.data?.toList();
-
-//                 return PageView.builder(
-//                   onPageChanged: (value) =>
-//                       print("${value}, totla: ${user?.length}"),
-//                   physics: new NeverScrollableScrollPhysics(),
-//                   controller: _pageController,
-//                   dragStartBehavior: DragStartBehavior.down,
-//                   itemCount: user?.length,
-//                   itemBuilder: (BuildContext context, int index) {
-//                     //   print(user?[index]!.technical);
-//                     return DiscoverWidget(
-//                       pageCount: user?.length,
-//                       pageNumber: index,
-//                       pageController: _pageController,
-//                       imageUrl: imageUrl,
-//                       widget: widget,
-//                       user: user?[index],
-//                     );
-//                   },
-//                 );
-//                 //DiscoverWidget(imageUrl: imageUrl, widget: widget);
-//               }
-
-//               return loader();
-//             },
-//           )),
-//     );
-//   }
-// }
+// import '../Helpers/constants.dart';
+// import '../Helpers/sharedPrefs.dart';
+// import 'constant_widget.dart';
 
 // class DiscoverWidget extends StatelessWidget {
-//   const DiscoverWidget(
-//       {Key? key,
-//       required this.imageUrl,
-//       required this.pageCount,
-//       required this.widget,
-//       required this.pageNumber,
-//       required this.pageController,
-//       required this.user})
-//       : super(key: key);
-
-//   final String imageUrl;
-//   final AppUser? user;
-//   final int pageNumber;
-//   final int? pageCount;
-//   final PageController pageController;
-//   final DiscoverScreen widget;
+//   const DiscoverWidget({required this.buddyUser,required this.currentUser, Key? key}) : super(key: key);
+//   final AppUser buddyUser,currentUser;
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -176,14 +207,14 @@
 //                       mainAxisAlignment: MainAxisAlignment.end,
 //                       children: [
 //                         CustomSubTitleText(
-//                           title: '${user?.lastName} ${user?.firstName}',
+//                           title: '${buddyUser.lastName} ${buddyUser.firstName}',
 //                           color: Colors.white,
 //                           size: 25,
 //                         ),
 //                         verticalSpacer(10),
 //                         CustomSubTitleText(
 //                           fontWeight: FontWeight.w100,
-//                           title: user?.skills?[0],
+//                           title: buddyUser.skills?[0],
 //                           color: Colors.white,
 //                           size: 19,
 //                         ),
@@ -197,7 +228,7 @@
 //                                 title: 'Nigeria'),
 //                             SmallCustomRowButton(
 //                                 icon: FontAwesomeIcons.phone,
-//                                 title: (user!.phone).toString()),
+//                                 title: (buddyUser.phone).toString()),
 //                             horizontalSpacer(20),
 //                           ],
 //                         )
@@ -228,7 +259,7 @@
 //                             color: Yellow,
 //                             shape: BoxShape.circle,
 //                             image: DecorationImage(
-//                                 image: NetworkImage(user!.imageUrl),
+//                                 image: NetworkImage(buddyUser.imageUrl),
 //                                 fit: BoxFit.cover),
 //                           ),
 //                         ),
@@ -250,7 +281,7 @@
 //                     children: [
 //                       DiscoveredColumn(
 //                           title: 'Technical',
-//                           child: user!.technical == "1"
+//                           child: buddyUser.technical == "1"
 //                               ? Icon(
 //                                   FontAwesomeIcons.circleCheck,
 //                                   color: Yellow,
@@ -284,7 +315,7 @@
 //             ),
 //             verticalSpacer(25),
 //             GestureDetector(
-//                 onTap: (() => _showBottomSheet(context, user: user)),
+//                 onTap: (() => _showBottomSheet(context, buddyUser:buddyUser)),
 //                 child: _UserInfoCard('title')),
 //             verticalSpacer(30),
 //             Padding(
@@ -296,11 +327,11 @@
 //                       onTap: (() async {
 //                         List<String> matchedId = [];
 //                         await FirestoreRepository().initializeMatches(
-//                           currentUserId: widget.currentUser.id!,
-//                           invitedUserId: user!.id!,
+//                           currentUserId: currentUser.id!,
+//                           invitedUserId: buddyUser.id!,
 //                           time: DateTime.now(),
 //                         );
-//                         final id = user!.id;
+//                         final id =buddyUser.id;
 //                         matchedId.add(id!);
 //                         FirestoreRepository().saveMatched(matchedId);
 //                       }),
@@ -352,7 +383,7 @@
 //             Row(
 //               children: [
 //                 Icon(
-//                   FontAwesomeIcons.user,
+//                   FontAwesomeIcons.buddyUser,
 //                   color: Colors.grey,
 //                   size: 19,
 //                 ),
@@ -398,7 +429,7 @@
 //   }
 // }
 
-// Future<dynamic> _showBottomSheet(BuildContext context, {AppUser? user}) {
+// Future<dynamic> _showBottomSheet(BuildContext context, {AppUser? buddyUser}) {
 //   return showModalBottomSheet(
 //       isScrollControlled: true,
 //       shape: const RoundedRectangleBorder(
@@ -416,12 +447,12 @@
 //             mainAxisAlignment: MainAxisAlignment.start,
 //             children: [
 //               CustomSubTitleText(
-//                 title: 'About ${user?.lastName}',
+//                 title: 'About ${buddyUser?.lastName}',
 //                 color: Color(0xFF2B2E4A),
 //               ),
 //               CustomSubTitleText(
 //                 align: true,
-//                 title: user!.bio!,
+//                 title: buddyUser!.bio!,
 //                 color: Colors.grey,
 //                 size: 16,
 //               )

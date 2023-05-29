@@ -14,13 +14,14 @@ import 'package:urban_hive_test/Widgets/constant_widget.dart';
 import '../Models/models.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen(
-      {Key? key,
-      required this.currentUser,
-      required this.invitedUser,
-      required this.chatRoomId})
-      : super(key: key);
+  const ChatScreen({
+    Key? key,
+    required this.currentUser,
+    required this.invitedUser,
+    required this.chatRoomId,
+  }) : super(key: key);
   static const routeName = '/usermatches';
+
   final String chatRoomId;
   final AppUser currentUser;
   final AppUser invitedUser;
@@ -57,6 +58,19 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  doThisOnLaunch() async {
+    UnreadModel? unreadDetails = await FirestoreRepository().getUserunreadbyid(
+        currentUserId: widget.currentUser.id!,
+        invitedUserId: widget.invitedUser.id!);
+
+    if (unreadDetails!.unreadBy != widget.currentUser.id) {
+      FirestoreRepository().updateUnreadCount(
+          chatRoomId: widget.chatRoomId,
+          unreadCount: 0,
+          unreadBy: unreadDetails.unreadBy);
+    }
+  }
+
   @override
   void initState() {
     FirestoreRepository().getChats(widget.chatRoomId).then((val) {
@@ -64,6 +78,7 @@ class _ChatScreenState extends State<ChatScreen> {
         chats = val;
       });
     });
+    doThisOnLaunch();
 
     FirebaseMessaging.instance.getInitialMessage();
 
@@ -129,8 +144,16 @@ class _ChatScreenState extends State<ChatScreen> {
                           "lastMessageSendTime": time,
                           "lastMessageSendBy": widget.currentUser.id!,
                         };
+                        UnreadModel? unreadDetails = await FirestoreRepository()
+                            .getUserunreadbyid(
+                                currentUserId: widget.currentUser.id!,
+                                invitedUserId: widget.invitedUser.id!);
                         FirestoreRepository().updateLastMessageSend(
                             chatRoomId, lastMessageInfoMap);
+                        FirestoreRepository().updateUnreadCount(
+                            unreadBy: widget.currentUser.id!,
+                            chatRoomId: chatRoomId,
+                            unreadCount: unreadDetails!.unreadCount + 1);
                         setState(() {
                           _formKey.currentState?.reset();
                         });

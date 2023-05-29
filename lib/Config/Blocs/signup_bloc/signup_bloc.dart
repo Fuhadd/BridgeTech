@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:urban_hive_test/Config/Blocs/login_bloc/login_bloc.dart';
 import 'package:urban_hive_test/Config/Repositories/firebase_storage_repository.dart';
 import 'package:urban_hive_test/Config/Repositories/firestore_repository.dart';
 import 'package:urban_hive_test/Config/Repositories/user_repository.dart';
@@ -32,11 +31,12 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       if (user != null) {
         await firestoreRepository.saveUserCredentials(event.email,
             event.firstName, event.lastName, event.phoneNumber, DateTime.now());
-        emit(SignupSuccessful(user));
+        // emit(SignupSuccessful(user));
         await firebaseStorageRepository.uploadImage(event.image);
         await firestoreRepository.saveUsersCredentialslocal();
         // emit(LoginSuccessful(user));
       }
+      print(1);
 
       emit(SignupSuccessful(user));
     } catch (error) {

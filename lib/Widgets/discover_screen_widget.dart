@@ -66,7 +66,7 @@ class _DiscoverScreenWidgetState extends State<DiscoverScreenWidget> {
                     //   // Yellow,
                     // ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                     //border: Border.all(),
-                    color: const Color.fromRGBO(255, 189, 89, 1),
+                    color: const Color(0xfff4a50c),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 25),
@@ -88,16 +88,15 @@ class _DiscoverScreenWidgetState extends State<DiscoverScreenWidget> {
                         ),
                         verticalSpacer(20),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            horizontalSpacer(20),
-                            const SmallCustomRowButton(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            SmallCustomRowButton(
                                 icon: FontAwesomeIcons.locationDot,
                                 title: 'Nigeria'),
-                            SmallCustomRowButton(
-                                icon: FontAwesomeIcons.phone,
-                                title: (widget.buddyUser!.phone).toString()),
-                            horizontalSpacer(20),
+                            // SmallCustomRowButton(
+                            //     icon: FontAwesomeIcons.phone,
+                            //     title: (widget.buddyUser!.phone).toString()),
+                            // horizontalSpacer(20),
                           ],
                         )
                       ],
@@ -179,13 +178,13 @@ class _DiscoverScreenWidgetState extends State<DiscoverScreenWidget> {
             CustomSubTitleText(
               align: true,
               title: 'General Information',
-              color: const Color(0xFF2B2E4A),
+              color: Colors.black,
             ),
             verticalSpacer(15),
             CustomBioText(
               align: true,
               title: widget.buddyUser!.bio!,
-              color: Colors.grey,
+              color: Colors.black,
             ),
             // GestureDetector(
             //     onTap: (() =>
@@ -329,7 +328,7 @@ class DiscoveredColumn extends StatelessWidget {
       children: [
         CustomSubTitleText(
           title: title,
-          color: Colors.grey,
+          color: Colors.black,
           size: 20,
         ),
         verticalSpacer(9),

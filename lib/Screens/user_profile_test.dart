@@ -96,32 +96,35 @@ Widget _buildUserPage(BuildContext context, AppUser user) {
           child: Stack(
             children: [
               Container(
+                height: 80,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Color(0xfff4a50c),
+                  // gradient: LinearGradient(colors: [
+                  //   Colors.purple,
+                  //   Yellow,
+                  // ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                  // borderRadius: BorderRadius.only(
+                  //     bottomRight: Radius.circular(20.0),
+                  //     bottomLeft: Radius.circular(20.0)),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      radius: 70,
-                      backgroundImage: NetworkImage(
-                        user.imageUrl,
-                      ),
-                    ),
-                    verticalSpacer(5),
+                    // CircleAvatar(
+                    //   radius: 70,
+                    //   backgroundImage: NetworkImage(
+                    //     user.imageUrl,
+                    //   ),
+                    // ),
+                    // verticalSpacer(5),
                     Text(
                       "${user.lastName} ${user.firstName}",
-                      style: Theme.of(context).textTheme.headline2,
+                      style: Theme.of(context).textTheme.headline2!.copyWith(
+                            color: Colors.black,
+                          ),
                     ),
                   ],
-                ),
-                height: 250,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Colors.purple,
-                    Yellow,
-                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-                  borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(20.0),
-                      bottomLeft: Radius.circular(20.0)),
                 ),
               ),
               // Positioned(
@@ -162,7 +165,7 @@ Widget _buildUserPage(BuildContext context, AppUser user) {
             ),
           ),
         ),
-        verticalSpacer(20),
+        verticalSpacer(5),
         UserFields(
           context,
           icon: Icons.mail,
@@ -211,24 +214,27 @@ Widget _buildUserPage(BuildContext context, AppUser user) {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: Row(
-              children: user.skills!
-                  .map((interest) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                colors: [Colors.purple, Yellow],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter),
-                            borderRadius: BorderRadius.circular(15),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+                children: user.skills!
+                    .map((interest) => Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  colors: [Colors.purple, Yellow],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Text(interest),
                           ),
-                          child: Text(interest),
-                        ),
-                      ))
-                  .toList()),
+                        ))
+                    .toList()),
+          ),
         )
       ],
     ),
@@ -242,6 +248,13 @@ Widget _userFields(BuildContext context,
     child: Column(
       children: [
         Container(
+          width: double.infinity - 50,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1.0, color: Colors.grey),
+            ),
+            color: Colors.white,
+          ),
           child: Column(
             children: [
               (Row(
@@ -269,13 +282,6 @@ Widget _userFields(BuildContext context,
               verticalSpacer(15)
             ],
           ),
-          width: double.infinity - 50,
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.grey),
-            ),
-            color: Colors.white,
-          ),
         ),
       ],
     ),
@@ -289,7 +295,7 @@ Future<dynamic> _showBottomSheet(BuildContext context, {required AppUser user}
     // String? userPhone,
     // String? gender}
     ) {
-  final _formKey = GlobalKey<FormBuilderState>();
+  final formKey = GlobalKey<FormBuilderState>();
   FirestoreRepository firestoreRepository = FirestoreRepository();
   return showModalBottomSheet(
       // clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -311,7 +317,7 @@ Future<dynamic> _showBottomSheet(BuildContext context, {required AppUser user}
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     FormBuilder(
-                      key: _formKey,
+                      key: formKey,
                       child: Column(
                         children: [
                           // customFormBuilderTextField(
@@ -454,44 +460,44 @@ Future<dynamic> _showBottomSheet(BuildContext context, {required AppUser user}
                           verticalSpacer(30),
                           CustomButton(
                             onTap: () {
-                              var validate = _formKey.currentState?.validate();
+                              var validate = formKey.currentState?.validate();
                               if (validate == true) {
-                                _formKey.currentState?.save();
+                                formKey.currentState?.save();
 
-                                var email = _formKey
+                                var email = formKey
                                     .currentState?.fields['email']?.value
                                     .toString()
                                     .trim();
-                                var firstName = _formKey
+                                var firstName = formKey
                                     .currentState?.fields['firstname']?.value
                                     .toString()
                                     .trim();
-                                var lastName = _formKey
+                                var lastName = formKey
                                     .currentState?.fields['lastname']?.value
                                     .toString()
                                     .trim();
 
-                                var phone = _formKey
+                                var phone = formKey
                                     .currentState?.fields['phone']?.value
                                     .toString()
                                     .trim();
                                 var bio =
-                                    _formKey.currentState?.fields['bio']?.value;
-                                var technical = _formKey
+                                    formKey.currentState?.fields['bio']?.value;
+                                var technical = formKey
                                     .currentState?.fields['technical']?.value;
 
-                                var looking = _formKey
+                                var looking = formKey
                                     .currentState?.fields['looking']?.value;
 
-                                firestoreRepository.updateUserCredentials(
-                                  email: email!,
-                                  firstName: firstName!,
-                                  lastName: lastName!,
-                                  phoneNumber: phone!,
-                                  bio: bio,
-                                  technical: technical,
-                                  looking: looking,
-                                );
+                                // firestoreRepository.updateUserCredentials(
+                                //   email: email!,
+                                //   firstName: firstName!,
+                                //   lastName: lastName!,
+                                //   phoneNumber: phone!,
+                                //   bio: bio,
+                                //   technical: technical,
+                                //   looking: looking,
+                                // );
 
                                 Navigator.pop(context);
                               }

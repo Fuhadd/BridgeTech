@@ -18,7 +18,7 @@ class TitleText extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               title,
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.displaySmall,
             )));
   }
 }
@@ -39,7 +39,7 @@ class BodyText extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               title,
-              style: Theme.of(context).textTheme.headline2!.copyWith(
+              style: Theme.of(context).textTheme.displayMedium!.copyWith(
                   fontSize: 14, fontWeight: FontWeight.normal, color: color),
             )));
   }
@@ -65,7 +65,7 @@ class SubTitleText extends StatelessWidget {
               title,
               style: Theme.of(context)
                   .textTheme
-                  .headline2!
+                  .displayMedium!
                   .copyWith(fontSize: size, fontWeight: fontWeight),
             )));
   }
@@ -93,13 +93,13 @@ class CustomSubTitleText extends StatelessWidget {
           ? Align(
               alignment: Alignment.centerLeft,
               child: Text(title,
-                  style: Theme.of(context).textTheme.headline2!.copyWith(
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
                       fontSize: size, fontWeight: fontWeight, color: color)))
           : Align(
               //alignment: Alignment.centerLeft,
               child: Text(
                 title,
-                style: Theme.of(context).textTheme.headline2!.copyWith(
+                style: Theme.of(context).textTheme.displayMedium!.copyWith(
                     fontSize: size, fontWeight: fontWeight, color: color),
               ),
             ),
@@ -211,7 +211,7 @@ class SmallCustomRowButton extends StatelessWidget {
             CustomSubTitleText(
               fontWeight: FontWeight.w100,
               title: title,
-              color: Colors.grey,
+              color: Colors.black,
               size: 18,
             ),
           ],
@@ -275,6 +275,64 @@ class SmallCustomAcceptButton extends StatelessWidget {
   }
 }
 
+class SmallCustomButton1 extends StatelessWidget {
+  final String title;
+  final bool isaccept;
+  final IconData? icon;
+  void Function()? onTap;
+
+  SmallCustomButton1({
+    required this.title,
+    required this.isaccept,
+    this.onTap,
+    this.icon,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          decoration: BoxDecoration(
+            boxShadow: [
+              const BoxShadow(
+                  blurRadius: 5,
+                  offset: Offset(0, 5),
+                  color: Color(0xfff4a50c)),
+              BoxShadow(
+                  offset: const Offset(-5, 0),
+                  color: isaccept ? Colors.black : Colors.black),
+              BoxShadow(
+                  color: isaccept ? Colors.black : Colors.black,
+                  offset: const Offset(5, 0)),
+            ],
+            color: isaccept ? Colors.black : Colors.black,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          //width: ,
+          // height: 20,
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: isaccept ? Colors.grey : Colors.red,
+                size: 17,
+              ),
+              horizontalSpacer(9),
+              CustomSubTitleText(
+                fontWeight: FontWeight.w100,
+                title: title,
+                color: isaccept ? Colors.white : Colors.white,
+                size: 18,
+              ),
+            ],
+          )),
+    );
+  }
+}
+
 Future<dynamic> showdialog(BuildContext context) {
   return showDialog(
       barrierDismissible: false,
@@ -283,8 +341,8 @@ Future<dynamic> showdialog(BuildContext context) {
         return SimpleDialog(
           elevation: 0,
           contentPadding: const EdgeInsets.all(90),
-          children: [loader()],
           backgroundColor: Colors.transparent,
+          children: [loader()],
         );
       });
 }
@@ -305,7 +363,7 @@ class CustomButton1 extends StatelessWidget {
     required this.title,
     this.onTap,
     this.color = Colors.black,
-    this.textcolor = Colors.white,
+    this.textcolor = Colors.black,
     Key? key,
   }) : super(key: key);
 
@@ -353,7 +411,7 @@ class CustomBioText extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 title,
-                style: Theme.of(context).textTheme.headline2!.copyWith(
+                style: Theme.of(context).textTheme.displayMedium!.copyWith(
                     fontSize: size, fontWeight: fontWeight, color: color),
                 maxLines: 4,
                 overflow: TextOverflow.ellipsis,
@@ -362,7 +420,7 @@ class CustomBioText extends StatelessWidget {
               //alignment: Alignment.centerLeft,
               child: Text(
                 title,
-                style: Theme.of(context).textTheme.headline2!.copyWith(
+                style: Theme.of(context).textTheme.displayMedium!.copyWith(
                     fontSize: size, fontWeight: fontWeight, color: color),
                 maxLines: 4,
                 overflow: TextOverflow.ellipsis,

@@ -32,10 +32,11 @@ class MatchContainer extends StatelessWidget {
           BoxShadow(blurRadius: 7, offset: Offset(-7, -7), color: Colors.grey),
         ],
         borderRadius: BorderRadius.circular(15),
-        gradient: LinearGradient(
-            colors: [Colors.grey.shade400, Yellow],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft),
+        color: const Color(0xfff4a50c),
+        // gradient: LinearGradient(
+        //     colors: [Colors.grey.shade400, Yellow],
+        //     begin: Alignment.topRight,
+        //     end: Alignment.bottomLeft),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
       child: Column(
@@ -51,7 +52,7 @@ class MatchContainer extends StatelessWidget {
               horizontalSpacer(18),
               CustomSubTitleText(
                 title: '${buddyUser!.lastName} ${buddyUser!.firstName}',
-                color: Color(0xFF2B2E4A),
+                color: const Color(0xFF2B2E4A),
                 size: 25,
               ),
             ],
@@ -79,11 +80,11 @@ class MatchContainer extends StatelessWidget {
                 Column(
                   children: [
                     buddyUser!.technical == "1"
-                        ? Icon(
+                        ? const Icon(
                             FontAwesomeIcons.circleCheck,
                             color: Colors.grey,
                           )
-                        : Icon(
+                        : const Icon(
                             FontAwesomeIcons.circle,
                             color: Colors.grey,
                           ),
@@ -96,9 +97,9 @@ class MatchContainer extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    Icon(
+                    const Icon(
                       FontAwesomeIcons.locationDot,
-                      color: Yellow,
+                      color: Colors.grey,
                     ),
                     Text(
                       "Nigeria",
@@ -126,7 +127,7 @@ class MatchContainer extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SmallCustomAcceptButton(
+                SmallCustomButton1(
                     onTap: (() async {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -138,7 +139,7 @@ class MatchContainer extends StatelessWidget {
                     isaccept: false,
                     icon: FontAwesomeIcons.idCard,
                     title: 'Profile'),
-                SmallCustomAcceptButton(
+                SmallCustomButton1(
                     onTap: (() async {
                       String chatRoomId = await FirestoreRepository()
                           .createChatRoomId(buddyUser!.id!, mainUser!.id!);
@@ -190,10 +191,11 @@ class MatchRequestContainer extends StatelessWidget {
           BoxShadow(blurRadius: 7, offset: Offset(-7, -7), color: Colors.grey),
         ],
         borderRadius: BorderRadius.circular(15),
-        gradient: LinearGradient(
-            colors: [Colors.grey.shade400, Yellow],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft),
+        color: const Color(0xfff4a50c),
+        // gradient: LinearGradient(
+        //     colors: [Colors.grey.shade400, Yellow],
+        //     begin: Alignment.topRight,
+        //     end: Alignment.bottomLeft),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
       child: Column(
@@ -209,7 +211,7 @@ class MatchRequestContainer extends StatelessWidget {
               horizontalSpacer(18),
               CustomSubTitleText(
                 title: '${buddyUser!.lastName} ${buddyUser!.firstName}',
-                color: Color(0xFF2B2E4A),
+                color: const Color(0xFF2B2E4A),
                 size: 25,
               ),
             ],
@@ -237,11 +239,11 @@ class MatchRequestContainer extends StatelessWidget {
                 Column(
                   children: [
                     buddyUser!.technical == "1"
-                        ? Icon(
+                        ? const Icon(
                             FontAwesomeIcons.circleCheck,
                             color: Colors.grey,
                           )
-                        : Icon(
+                        : const Icon(
                             FontAwesomeIcons.circle,
                             color: Colors.grey,
                           ),
@@ -254,9 +256,10 @@ class MatchRequestContainer extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    Icon(
+                    const Icon(
                       FontAwesomeIcons.locationDot,
-                      color: Yellow,
+                      color: Colors.grey,
+                      // color: Yellow,
                     ),
                     Text(
                       "Nigeria",
@@ -284,7 +287,7 @@ class MatchRequestContainer extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SmallCustomAcceptButton(
+                SmallCustomButton1(
                     onTap: (() async {
                       String matchId = await FirestoreRepository()
                           .createChatRoomId(buddyUser!.id!, mainUser!.id!);
@@ -293,7 +296,7 @@ class MatchRequestContainer extends StatelessWidget {
                     isaccept: false,
                     icon: FontAwesomeIcons.xmark,
                     title: 'Decline'),
-                SmallCustomAcceptButton(
+                SmallCustomButton1(
                     onTap: (() async {
                       String matchId = await FirestoreRepository()
                           .createChatRoomId(buddyUser!.id!, mainUser!.id!);
@@ -353,7 +356,7 @@ class MatchFailedContainer extends StatelessWidget {
               horizontalSpacer(18),
               CustomSubTitleText(
                 title: '${buddyUser!.lastName} ${buddyUser!.firstName}',
-                color: Color(0xFF2B2E4A),
+                color: const Color(0xFF2B2E4A),
                 size: 25,
               ),
             ],
@@ -381,11 +384,11 @@ class MatchFailedContainer extends StatelessWidget {
                 Column(
                   children: [
                     buddyUser!.technical == "1"
-                        ? Icon(
+                        ? const Icon(
                             FontAwesomeIcons.circleCheck,
                             color: Colors.grey,
                           )
-                        : Icon(
+                        : const Icon(
                             FontAwesomeIcons.circle,
                             color: Colors.grey,
                           ),
@@ -478,10 +481,11 @@ class TestContainer extends StatelessWidget {
           BoxShadow(blurRadius: 7, offset: Offset(-7, -7), color: Colors.grey),
         ],
         borderRadius: BorderRadius.circular(15),
-        gradient: LinearGradient(
-            colors: [Colors.grey.shade400, Yellow],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft),
+        color: const Color(0xfff4a50c),
+        // gradient: LinearGradient(
+        //     colors: [Colors.grey.shade400, Yellow],
+        //     begin: Alignment.topRight,
+        //     end: Alignment.bottomLeft),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
       child: Column(
@@ -497,7 +501,7 @@ class TestContainer extends StatelessWidget {
               CustomSubTitleText(
                 title:
                     '${snapshot.data!.docs[index].get("lastName")} ${snapshot.data!.docs[index].get("firstName")}',
-                color: Color(0xFF2B2E4A),
+                color: const Color(0xFF2B2E4A),
                 size: 25,
               ),
             ],
@@ -526,11 +530,11 @@ class TestContainer extends StatelessWidget {
                 Column(
                   children: [
                     snapshot.data!.docs[index].get("technical") == "1"
-                        ? Icon(
+                        ? const Icon(
                             FontAwesomeIcons.circleCheck,
                             color: Colors.grey,
                           )
-                        : Icon(
+                        : const Icon(
                             FontAwesomeIcons.circle,
                             color: Colors.grey,
                           ),
@@ -634,7 +638,7 @@ class SentRequestContainer extends StatelessWidget {
               horizontalSpacer(18),
               CustomSubTitleText(
                 title: '${buddyUser!.lastName} ${buddyUser!.firstName}',
-                color: Color(0xFF2B2E4A),
+                color: const Color(0xFF2B2E4A),
                 size: 25,
               ),
             ],
@@ -662,11 +666,11 @@ class SentRequestContainer extends StatelessWidget {
                 Column(
                   children: [
                     buddyUser!.technical == "1"
-                        ? Icon(
+                        ? const Icon(
                             FontAwesomeIcons.circleCheck,
                             color: Colors.grey,
                           )
-                        : Icon(
+                        : const Icon(
                             FontAwesomeIcons.circle,
                             color: Colors.grey,
                           ),

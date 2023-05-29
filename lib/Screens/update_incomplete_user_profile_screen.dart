@@ -10,8 +10,9 @@ import '../Helpers/colors.dart';
 import '../Helpers/constants.dart';
 import '../Models/models.dart';
 
-class UpdateUserProfileTestScreen extends StatelessWidget {
-  const UpdateUserProfileTestScreen({required this.currentUser, Key? key})
+class IncompleteUpdateUserProfileTestScreen extends StatelessWidget {
+  const IncompleteUpdateUserProfileTestScreen(
+      {required this.currentUser, Key? key})
       : super(key: key);
   final AppUser currentUser;
 
@@ -35,6 +36,7 @@ class UpdateUserProfileTestScreen extends StatelessWidget {
 
 Widget _buildUserPage(BuildContext context, AppUser user) {
   final formKey = GlobalKey<FormBuilderState>();
+
   return SingleChildScrollView(
     child: Column(
       children: [
@@ -263,7 +265,6 @@ Widget _buildUserPage(BuildContext context, AppUser user) {
                       _showBottomSheetSkills(
                         context,
                         formKey: formKey,
-                        skills: user.skills!,
                         email: email!,
                         firstName: firstName!,
                         lastName: lastName!,
@@ -345,247 +346,247 @@ Widget _userFields(BuildContext context,
   );
 }
 
-// Future<dynamic> _showBottomSheet(BuildContext context, {required AppUser user}
-//     // {var phoneNumber,
-//     // String? userName,
-//     // String? userEmail,
-//     // String? userPhone,
-//     // String? gender}
-//     ) {
-//   final formKey = GlobalKey<FormBuilderState>();
-//   FirestoreRepository firestoreRepository = FirestoreRepository();
-//   return showModalBottomSheet(
-//       // clipBehavior: Clip.antiAliasWithSaveLayer,
-//       isScrollControlled: true,
-//       shape: const RoundedRectangleBorder(
-//         borderRadius: BorderRadius.vertical(
-//           top: Radius.circular(20),
-//         ),
-//       ),
-//       context: context,
-//       builder: (context) {
-//         return SingleChildScrollView(
-//           child: Wrap(
-//             children: [
-//               Container(
-//                 padding:
-//                     const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-//                 child: Column(
-//                   mainAxisSize: MainAxisSize.min,
-//                   children: [
-//                     FormBuilder(
-//                       key: formKey,
-//                       child: Column(
-//                         children: [
-//                           // customFormBuilderTextField(
-//                           //   'username',
-//                           //   Icons.person,
-//                           //   null,
-//                           //   'User Name',
-//                           //   initialValue: userName,
-//                           //   validator: FormBuilderValidators.compose(
-//                           //     [
-//                           //       FormBuilderValidators.minLength(4,
-//                           //           errorText:
-//                           //               'A valid username should be greater than 4 characters '),
-//                           //     ],
-//                           //   ),
-//                           // ),
-//                           // verticalSpacer(25),
-//                           customFormBuilderTextField(
-//                             'firstname',
-//                             Icons.person,
-//                             null,
-//                             'First Name',
-//                             initialValue: user.firstName,
-//                             validator: FormBuilderValidators.compose(
-//                               [
-//                                 FormBuilderValidators.minLength(4,
-//                                     errorText:
-//                                         'A valid first name should be greater than 4 characters '),
-//                               ],
-//                             ),
-//                           ),
-//                           verticalSpacer(25),
+Future<dynamic> _showBottomSheet(BuildContext context, {required AppUser user}
+    // {var phoneNumber,
+    // String? userName,
+    // String? userEmail,
+    // String? userPhone,
+    // String? gender}
+    ) {
+  final formKey = GlobalKey<FormBuilderState>();
+  FirestoreRepository firestoreRepository = FirestoreRepository();
+  return showModalBottomSheet(
+      // clipBehavior: Clip.antiAliasWithSaveLayer,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: Wrap(
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FormBuilder(
+                      key: formKey,
+                      child: Column(
+                        children: [
+                          // customFormBuilderTextField(
+                          //   'username',
+                          //   Icons.person,
+                          //   null,
+                          //   'User Name',
+                          //   initialValue: userName,
+                          //   validator: FormBuilderValidators.compose(
+                          //     [
+                          //       FormBuilderValidators.minLength(4,
+                          //           errorText:
+                          //               'A valid username should be greater than 4 characters '),
+                          //     ],
+                          //   ),
+                          // ),
+                          // verticalSpacer(25),
+                          customFormBuilderTextField(
+                            'firstname',
+                            Icons.person,
+                            null,
+                            'First Name',
+                            initialValue: user.firstName,
+                            validator: FormBuilderValidators.compose(
+                              [
+                                FormBuilderValidators.minLength(4,
+                                    errorText:
+                                        'A valid first name should be greater than 4 characters '),
+                              ],
+                            ),
+                          ),
+                          verticalSpacer(25),
 
-//                           customFormBuilderTextField(
-//                             'lastname',
-//                             Icons.person,
-//                             null,
-//                             'Last Name',
-//                             initialValue: user.lastName,
-//                             validator: FormBuilderValidators.compose(
-//                               [
-//                                 FormBuilderValidators.minLength(4,
-//                                     errorText:
-//                                         'A valid last name should be greater than 4 characters '),
-//                               ],
-//                             ),
-//                           ),
+                          customFormBuilderTextField(
+                            'lastname',
+                            Icons.person,
+                            null,
+                            'Last Name',
+                            initialValue: user.lastName,
+                            validator: FormBuilderValidators.compose(
+                              [
+                                FormBuilderValidators.minLength(4,
+                                    errorText:
+                                        'A valid last name should be greater than 4 characters '),
+                              ],
+                            ),
+                          ),
 
-//                           customFormBuilderTextField(
-//                             'email',
-//                             Icons.mail,
-//                             null,
-//                             'Email',
-//                             initialValue: user.email,
-//                             validator: FormBuilderValidators.compose(
-//                               [
-//                                 FormBuilderValidators.email(
-//                                     errorText: 'Provided email not valid '),
-//                                 FormBuilderValidators.required(
-//                                     errorText: 'Email field cannot be empty '),
-//                               ],
-//                             ),
-//                           ),
-//                           // verticalSpacer(25),
-//                           // customFormBuilderTextField(
-//                           //   'email',
-//                           //   Icons.mail,
-//                           //   null,
-//                           //   'Email',
-//                           //   validator: FormBuilderValidators.compose(
-//                           //     [
-//                           //       FormBuilderValidators.email(
-//                           //           errorText: 'Provided email not valid '),
-//                           //       FormBuilderValidators.required(
-//                           //           errorText: 'Email field cannot be empty '),
-//                           //     ],
-//                           //   ),
-//                           // ),
-//                           verticalSpacer(25),
-//                           customFormBuilderTextField(
-//                             'phone',
-//                             Icons.phone,
-//                             null,
-//                             'Phone',
-//                             initialValue: user.phone,
-//                             prefix: Text(
-//                               '+234 ',
-//                               style: Theme.of(context)
-//                                   .textTheme
-//                                   .headline5!
-//                                   .copyWith(color: Colors.grey),
-//                             ),
-//                             validator: FormBuilderValidators.compose(
-//                               [
-//                                 FormBuilderValidators.required(
-//                                     errorText: 'Email field cannot be empty '),
-//                               ],
-//                             ),
-//                           ),
-//                           CustomFormBuilderRadioGroup1(
-//                               "technical", "Are You Technical",
-//                               initialValue: user.technical),
-//                           verticalSpacer(20),
-//                           CustomFormBuilderRadioGroup1(
-//                               "looking", "What Are You Looking For",
-//                               initialValue: user.looking),
-//                           customFormBuilderMultiTextField(
-//                             'bio',
-//                             Icons.person,
-//                             null,
-//                             'About You ',
-//                             initialValue: user.bio,
-//                             isHint: false,
-//                             hintText:
-//                                 'Use this space to show Co users you have the skills and experience they\'re looking for',
-//                             helperText: 'Describe your strengths and skills\n'
-//                                 ' Highlight projects, accomplishments and education'
-//                                 'Keep it short and make sure it\'s error-free',
-//                             validator: FormBuilderValidators.compose(
-//                               [
-//                                 FormBuilderValidators.minLength(4,
-//                                     errorText:
-//                                         'A valid first name should be greater than 4 characters '),
-//                               ],
-//                             ),
-//                           ),
-//                           verticalSpacer(25),
-//                           // verticalSpacer(25),
-//                           // IntlPhoneField(
-//                           //   initialValue: userPhone,
-//                           //   decoration:
-//                           //       customFormDecoration('Phone Number', null, null),
-//                           //   initialCountryCode: 'NG',
-//                           //   onChanged: (phone) {
-//                           //     phoneNumber = phone.completeNumber;
-//                           //     print(phone.completeNumber);
-//                           //   },
-//                           // ),
-//                           verticalSpacer(25),
-//                           verticalSpacer(30),
-//                           CustomButton(
-//                             onTap: () {
-//                               var validate = formKey.currentState?.validate();
-//                               if (validate == true) {
-//                                 formKey.currentState?.save();
+                          customFormBuilderTextField(
+                            'email',
+                            Icons.mail,
+                            null,
+                            'Email',
+                            initialValue: user.email,
+                            validator: FormBuilderValidators.compose(
+                              [
+                                FormBuilderValidators.email(
+                                    errorText: 'Provided email not valid '),
+                                FormBuilderValidators.required(
+                                    errorText: 'Email field cannot be empty '),
+                              ],
+                            ),
+                          ),
+                          // verticalSpacer(25),
+                          // customFormBuilderTextField(
+                          //   'email',
+                          //   Icons.mail,
+                          //   null,
+                          //   'Email',
+                          //   validator: FormBuilderValidators.compose(
+                          //     [
+                          //       FormBuilderValidators.email(
+                          //           errorText: 'Provided email not valid '),
+                          //       FormBuilderValidators.required(
+                          //           errorText: 'Email field cannot be empty '),
+                          //     ],
+                          //   ),
+                          // ),
+                          verticalSpacer(25),
+                          customFormBuilderTextField(
+                            'phone',
+                            Icons.phone,
+                            null,
+                            'Phone',
+                            initialValue: user.phone,
+                            prefix: Text(
+                              '+234 ',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5!
+                                  .copyWith(color: Colors.grey),
+                            ),
+                            validator: FormBuilderValidators.compose(
+                              [
+                                FormBuilderValidators.required(
+                                    errorText: 'Email field cannot be empty '),
+                              ],
+                            ),
+                          ),
+                          CustomFormBuilderRadioGroup1(
+                              "technical", "Are You Technical",
+                              initialValue: user.technical),
+                          verticalSpacer(20),
+                          CustomFormBuilderRadioGroup1(
+                              "looking", "What Are You Looking For",
+                              initialValue: user.looking),
+                          customFormBuilderMultiTextField(
+                            'bio',
+                            Icons.person,
+                            null,
+                            'About You ',
+                            initialValue: user.bio,
+                            isHint: false,
+                            hintText:
+                                'Use this space to show Co users you have the skills and experience they\'re looking for',
+                            helperText: 'Describe your strengths and skills\n'
+                                ' Highlight projects, accomplishments and education'
+                                'Keep it short and make sure it\'s error-free',
+                            validator: FormBuilderValidators.compose(
+                              [
+                                FormBuilderValidators.minLength(4,
+                                    errorText:
+                                        'A valid first name should be greater than 4 characters '),
+                              ],
+                            ),
+                          ),
+                          verticalSpacer(25),
+                          // verticalSpacer(25),
+                          // IntlPhoneField(
+                          //   initialValue: userPhone,
+                          //   decoration:
+                          //       customFormDecoration('Phone Number', null, null),
+                          //   initialCountryCode: 'NG',
+                          //   onChanged: (phone) {
+                          //     phoneNumber = phone.completeNumber;
+                          //     print(phone.completeNumber);
+                          //   },
+                          // ),
+                          verticalSpacer(25),
+                          verticalSpacer(30),
+                          CustomButton(
+                            onTap: () {
+                              var validate = formKey.currentState?.validate();
+                              if (validate == true) {
+                                formKey.currentState?.save();
 
-//                                 var email = formKey
-//                                     .currentState?.fields['email']?.value
-//                                     .toString()
-//                                     .trim();
-//                                 var firstName = formKey
-//                                     .currentState?.fields['firstname']?.value
-//                                     .toString()
-//                                     .trim();
-//                                 var lastName = formKey
-//                                     .currentState?.fields['lastname']?.value
-//                                     .toString()
-//                                     .trim();
+                                var email = formKey
+                                    .currentState?.fields['email']?.value
+                                    .toString()
+                                    .trim();
+                                var firstName = formKey
+                                    .currentState?.fields['firstname']?.value
+                                    .toString()
+                                    .trim();
+                                var lastName = formKey
+                                    .currentState?.fields['lastname']?.value
+                                    .toString()
+                                    .trim();
 
-//                                 var phone = formKey
-//                                     .currentState?.fields['phone']?.value
-//                                     .toString()
-//                                     .trim();
-//                                 var bio =
-//                                     formKey.currentState?.fields['bio']?.value;
-//                                 var technical = formKey
-//                                     .currentState?.fields['technical']?.value;
+                                var phone = formKey
+                                    .currentState?.fields['phone']?.value
+                                    .toString()
+                                    .trim();
+                                var bio =
+                                    formKey.currentState?.fields['bio']?.value;
+                                var technical = formKey
+                                    .currentState?.fields['technical']?.value;
 
-//                                 var looking = formKey
-//                                     .currentState?.fields['looking']?.value;
+                                var looking = formKey
+                                    .currentState?.fields['looking']?.value;
 
-//                                 // firestoreRepository.updateUserCredentials(
-//                                 //   email: email!,
-//                                 //   firstName: firstName!,
-//                                 //   lastName: lastName!,
-//                                 //   phoneNumber: phone!,
-//                                 //   bio: bio,
-//                                 //   technical: technical,
-//                                 //   looking: looking,
-//                                 // );
+                                // firestoreRepository.updateUserCredentials(
+                                //   email: email!,
+                                //   firstName: firstName!,
+                                //   lastName: lastName!,
+                                //   phoneNumber: phone!,
+                                //   bio: bio,
+                                //   technical: technical,
+                                //   looking: looking,
+                                // );
 
-//                                 // Navigator.pop(context);
-//                               }
-//                             },
-//                             title: 'Update details',
-//                           ),
-//                           verticalSpacer(20),
-//                         ],
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         );
-//       });
-// }
+                                // Navigator.pop(context);
+                              }
+                            },
+                            title: 'Update details',
+                          ),
+                          verticalSpacer(20),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      });
+}
 
 Future<dynamic> _showBottomSheetSkills(
   BuildContext context, {
   required String email,
   required String firstName,
   required String lastName,
-  required List skills,
   required String bio,
   required String technical,
   required String looking,
   var formKey,
   var phoneNumber,
 }) {
+  List<String>? skills = [];
   final formKey1 = GlobalKey<FormBuilderState>();
   ConstantRepository? constantRepository = ConstantRepository();
   FirestoreRepository firestoreRepository = FirestoreRepository();
@@ -612,7 +613,6 @@ Future<dynamic> _showBottomSheetSkills(
                       Icons.person,
                       null,
                       'Your Job Descripion',
-                      initialValue: skills[0] ?? '',
                       helperText:
                           "Current Job Decription (e.g Flutter Developer)",
                       validator: FormBuilderValidators.compose(
@@ -623,37 +623,45 @@ Future<dynamic> _showBottomSheetSkills(
                       ),
                     ),
                     verticalSpacer(25),
-                    customFormBuilderTextField('skill2', Icons.mail, null,
-                        'Add additional skill(optional)',
-                        initialValue: skills.length >= 2 ? skills[1] : ''),
+                    customFormBuilderTextField(
+                      'skill2',
+                      Icons.mail,
+                      null,
+                      'Add additional skill(optional)',
+                    ),
                     verticalSpacer(25),
-                    customFormBuilderTextField('skill3', Icons.mail, null,
-                        'Add additional skill(optional)',
-                        initialValue: skills.length >= 3 ? skills[2] : ''),
-                    customFormBuilderTextField('skill4', Icons.mail, null,
-                        'Add additional skill(optional)',
-                        initialValue: skills.length >= 4 ? skills[3] : ''),
+                    customFormBuilderTextField(
+                      'skill3',
+                      Icons.mail,
+                      null,
+                      'Add additional skill(optional)',
+                    ),
+                    customFormBuilderTextField(
+                      'skill4',
+                      Icons.mail,
+                      null,
+                      'Add additional skill(optional)',
+                    ),
                     verticalSpacer(30),
                     CustomButton(
                       onTap: () async {
                         var validate = formKey1.currentState?.validate();
+                        print(3);
                         if (validate == true) {
                           formKey1.currentState?.save();
                           var skill1 =
                               formKey1.currentState?.fields['skill1']?.value;
                           print(skill1);
-                          print(
-                              formKey1.currentState?.fields['skill2']?.value ==
-                                  '');
                           var skill2 =
                               formKey1.currentState?.fields['skill2']?.value;
                           var skill3 =
                               formKey1.currentState?.fields['skill3']?.value;
                           var skill4 =
                               formKey1.currentState?.fields['skill4']?.value;
-                          skills = constantRepository.convertStringToList(
+                          print(2);
+                          skills = constantRepository.convertStringToList1(
                               skill1, skill2, skill3, skill4);
-
+                          print(1);
                           print(skills);
                           await firestoreRepository.updateUserCredentials(
                               email: email,
@@ -663,7 +671,7 @@ Future<dynamic> _showBottomSheetSkills(
                               bio: bio,
                               technical: technical,
                               looking: looking,
-                              skills: skills);
+                              skills: skills!);
 
                           Navigator.pushReplacement(
                               context,

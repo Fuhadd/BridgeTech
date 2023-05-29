@@ -46,9 +46,9 @@ class FirestoreRepository {
     required String lastName,
     required String phoneNumber,
     required String bio,
+    required List skills,
     required String technical,
     required String looking,
-    // required List<String> skills,
   }) async {
     String? uid = firebaseAuth.currentUser?.uid.toString();
     await firebaseFirestore.doc(uid.toString()).set(
@@ -58,11 +58,10 @@ class FirestoreRepository {
           'firstName': firstName,
           'lastName': lastName,
           'phoneNumber': phoneNumber,
-
-          // 'skills': skills,
           'bio': bio,
           'technical': technical,
           'looking': looking,
+          'skills': skills,
         },
         SetOptions(
           merge: true,
@@ -73,14 +72,8 @@ class FirestoreRepository {
   Future<void> saveMatched(List<String> matchedUserId) async {
     String? uid = firebaseAuth.currentUser?.uid.toString();
     await firebaseFirestore.doc(uid.toString()).update(
-      //.set(
       {
         'matchedUsers': FieldValue.arrayUnion(matchedUserId),
-        // 'email': email,
-        // 'firstName': firstName,
-        // 'lastName': lastName,
-        // 'phoneNumber': phoneNumber,
-        // 'accountCreated': accountCreated,
       },
     );
     return;
@@ -103,14 +96,8 @@ class FirestoreRepository {
   Future<void> saveMatchedBuddy(
       String buddyUid, List<String> matchedUserId) async {
     await firebaseFirestore.doc(buddyUid.toString()).update(
-      //.set(
       {
         'matchedUsers': FieldValue.arrayUnion(matchedUserId),
-        // 'email': email,
-        // 'firstName': firstName,
-        // 'lastName': lastName,
-        // 'phoneNumber': phoneNumber,
-        // 'accountCreated': accountCreated,
       },
     );
     return;
@@ -125,11 +112,7 @@ class FirestoreRepository {
 
       if (snapshot.exists) {
         return AppUser.fromJson(snapshot.data());
-        //as Map<String, dynamic>);
-
-        // app_user.User.fromJson(snapshot.data());
       }
-      //print(snapshot);
     } catch (error) {}
     return null;
   }
@@ -141,11 +124,7 @@ class FirestoreRepository {
 
       if (snapshot.exists) {
         return AppUser.fromJson(snapshot.data());
-        //as Map<String, dynamic>);
-
-        // app_user.User.fromJson(snapshot.data());
       }
-      //print(snapshot);
     } catch (error) {}
     return null;
   }
@@ -165,7 +144,6 @@ class FirestoreRepository {
         return true;
       }
       return false;
-      //print(snapshot);
     } catch (error) {
       return false;
     }
@@ -174,6 +152,8 @@ class FirestoreRepository {
   Future<AppUser?> saveUsersCredentialslocal() async {
     try {
       AppUser? user = await getUsersCredentials();
+
+      print(user);
 
       if (user != null) {
         final userJson = json.encode(user.toJson());
@@ -235,15 +215,6 @@ class FirestoreRepository {
     };
 
     await addChatRoom(chatRoom, chatRoomId);
-
-    // Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) => Chat(
-    //               chatRoomId: chatRoomId,
-    //             )))
-
-    // ;
   }
 
   Future<void>? initalizeChat(String chatRoomId, chatMessageData) {
@@ -268,9 +239,6 @@ class FirestoreRepository {
         "sendBy": currentUserId,
         "message": message,
         'time': time,
-        // "listenerName": listenerUser!.firstName,
-        // "listenerImage": listenerUser.imageUrl,
-        // "listenerId": listenerUser.imageUrl,
       };
 
       await initalizeChat(chatRoomId, chatMessageMap);
@@ -325,19 +293,12 @@ class FirestoreRepository {
         .where("isAccept", isEqualTo: "0")
         .where("isReject", isEqualTo: "0")
         .where("sentBy", isEqualTo: currentUserId)
-        // .orderBy("sentBy", descending: true)
         .snapshots();
   }
 
   Future<Stream<DocumentSnapshot>> getCurrentUserProfile() async {
     String? uid = firebaseAuth.currentUser?.uid.toString();
     return firebaseFirestore.doc(uid).snapshots();
-    // .where("users", arrayContains: currentUserId)
-    // .where("isAccept", isEqualTo: "0")
-    // .where("isReject", isEqualTo: "0")
-    // .where("sentBy", isEqualTo: currentUserId)
-    // // .orderBy("sentBy", descending: true)
-    // .snapshots();
   }
 
   Future<Stream<QuerySnapshot>> getFailedConnections(
@@ -358,22 +319,15 @@ class FirestoreRepository {
     return firebaseFirestore
         .orderBy("id", descending: true)
         .where("id", whereNotIn: matchedUserId)
-        // .where("id", isNotEqualTo: mainUserId)
-        // .where("isReject", isEqualTo: "1")
-        // .orderBy("technical", descending: true)
         .orderBy("technical", descending: true)
         .snapshots();
   }
 
-  Future<Stream<QuerySnapshot>> checkTheUsers(currentUserId, buddyUserId
-      // String currentUserId
-      ) async {
+  Future<Stream<QuerySnapshot>> checkTheUsers(
+      currentUserId, buddyUserId) async {
     String matchId = await createChatRoomId(currentUserId, buddyUserId);
     return matchFirebaseFirestore
         .where("matchId", isNotEqualTo: matchId)
-        // .where("users", whereNotIn: )
-        // .where("isReject", isEqualTo: "1")
-        // .orderBy("sentAt", descending: true)
         .snapshots();
   }
 
@@ -385,7 +339,7 @@ class FirestoreRepository {
       String chatRoomId, String currentUserId) async {
     String? buddyUserId =
         chatRoomId.replaceAll(currentUserId, "").replaceAll("_", "");
-    //QuerySnapshot querySnapshot = await getUserInfo(buddyUserId);
+
     AppUser? buddyDetails = await getUsersCredentialsbyid(buddyUserId);
     return buddyDetails;
   }
@@ -468,12 +422,46 @@ class FirestoreRepository {
         dynamic data = snapshot.data();
         String value = data?['token'];
         return value;
-        //as Map<String, dynamic>);
-
-        // app_user.User.fromJson(snapshot.data());
       }
-      //print(snapshot);
     } catch (error) {}
     return '';
+  }
+
+  Future<UnreadModel?> getUserunreadbyid({
+    required String currentUserId,
+    required String invitedUserId,
+  }) async {
+    try {
+      String matchId = await createChatRoomId(currentUserId, invitedUserId);
+      final appUser = chatFirebaseFirestore.doc(matchId);
+      var snapshot = await appUser.get();
+
+      if (snapshot.exists) {
+        dynamic data = snapshot.data();
+        int unreadCount = data?['unreadCount'];
+        String unreadBy = data?['unreadBy'];
+        UnreadModel result =
+            UnreadModel(unreadBy: unreadBy, unreadCount: unreadCount);
+        return result;
+      }
+    } catch (error) {}
+    return null;
+  }
+
+  Future<void>? updateUnreadCount(
+      {required String chatRoomId,
+      required String unreadBy,
+      required int unreadCount}) async {
+    chatFirebaseFirestore.doc(chatRoomId).set(
+        {
+          "unreadCount": unreadCount,
+          "unreadBy": unreadBy,
+        },
+        SetOptions(
+          merge: true,
+        )).catchError((e) {
+      print(e.toString());
+    });
+    return;
   }
 }

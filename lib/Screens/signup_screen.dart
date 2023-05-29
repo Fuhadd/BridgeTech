@@ -22,7 +22,7 @@ import 'login_screen.dart';
 class SignUpScreen extends StatefulWidget {
   static const routeName = '/signup';
 
-  SignUpScreen({Key? key}) : super(key: key);
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -66,7 +66,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             ?.pickImageFromGallery();
                                     final tempimage = File(tempPath.toString());
                                     setState(() {
-                                      this.image = tempimage;
+                                      image = tempimage;
                                     });
                                     // print(imagePath);
                                   },
@@ -277,7 +277,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           listener: (context, state) {
                         if (state is SignupSuccessful) {
                           Navigator.pushReplacementNamed(
-                              context, VerifyBioScreen.routeName);
+                              context, HomePage.routeName);
+
+                          // HomePage()
 
                           //context, VerifyEmailScreen.routeName);
                         }

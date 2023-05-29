@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,57 +13,69 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NavigationDrawer(
-        pageIndex: 8,
-      ),
-      appBar: AppBar(
-        title: Text('Settings'),
-      ),
-      body: Column(
-        children: [
-          verticalSpacer(20),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, ForgotPassword.routeName);
-            },
-            child: Card(
-              margin: EdgeInsets.all(20),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.mode_edit),
-                    horizontalSpacer(20),
-                    Text('Change/Reset Password')
-                  ],
-                ),
-              ),
-            ),
+    return SafeArea(
+      child: Scaffold(
+        drawer: const NavigationDrawer(
+          pageIndex: 8,
+        ),
+        appBar: AppBar(
+          title: const Text(
+            'Settings',
+            style: TextStyle(fontSize: 22, color: Colors.black),
           ),
-          GestureDetector(
-            onTap: () async {
-              SharedPreferences preferences =
-                  await SharedPreferences.getInstance();
-              await preferences.remove('user');
-              UserRepository().logOut();
-              Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-            },
-            child: Card(
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.logout),
-                    horizontalSpacer(10),
-                    Text('Logout')
-                  ],
+          backgroundColor: const Color(0xfff4a50c),
+        ),
+        body: Column(
+          children: [
+            verticalSpacer(20),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, ForgotPassword.routeName);
+              },
+              child: Card(
+                margin: const EdgeInsets.all(20),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.mode_edit),
+                      horizontalSpacer(15),
+                      const Text(
+                        'Change/Reset Password',
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-          )
-        ],
+            GestureDetector(
+              onTap: () async {
+                SharedPreferences preferences =
+                    await SharedPreferences.getInstance();
+                await preferences.remove('user');
+                UserRepository().logOut();
+                Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+              },
+              child: Card(
+                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.logout),
+                      horizontalSpacer(15),
+                      const Text(
+                        'Logout',
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

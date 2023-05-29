@@ -69,6 +69,17 @@ Widget buildUserPage(BuildContext context, AppUser user) {
         Stack(
           children: [
             Container(
+              height: 250,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  Colors.purple,
+                  Yellow,
+                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                borderRadius: const BorderRadius.only(
+                    bottomRight: Radius.circular(20.0),
+                    bottomLeft: Radius.circular(20.0)),
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -84,17 +95,6 @@ Widget buildUserPage(BuildContext context, AppUser user) {
                     style: Theme.of(context).textTheme.headline2,
                   ),
                 ],
-              ),
-              height: 250,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  Colors.purple,
-                  Yellow,
-                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-                borderRadius: const BorderRadius.only(
-                    bottomRight: Radius.circular(20.0),
-                    bottomLeft: Radius.circular(20.0)),
               ),
             ),
             // Positioned(
@@ -120,7 +120,7 @@ Widget buildUserPage(BuildContext context, AppUser user) {
               },
               icon: const Icon(Icons.edit, color: Colors.pink),
               label: const Text(
-                'Edit Profile',
+                'Edit Profillle',
                 style: TextStyle(color: Colors.pink),
               ),
             ),
@@ -206,6 +206,13 @@ Widget UserFields(BuildContext context,
     child: Column(
       children: [
         Container(
+          width: double.infinity - 50,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1.0, color: Colors.grey),
+            ),
+            color: Colors.white,
+          ),
           child: Column(
             children: [
               (Row(
@@ -232,13 +239,6 @@ Widget UserFields(BuildContext context,
                   )),
               verticalSpacer(15)
             ],
-          ),
-          width: double.infinity - 50,
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.grey),
-            ),
-            color: Colors.white,
           ),
         ),
       ],
